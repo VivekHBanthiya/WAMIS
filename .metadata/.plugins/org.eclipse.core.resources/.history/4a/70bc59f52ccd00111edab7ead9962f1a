@@ -1,0 +1,366 @@
+package cdac.egov.qmssvr.services;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.RevisionType;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import cdac.egov.qmssvr.dto.BuildingRequest;
+import cdac.egov.qmssvr.dto.BuildingRevisionDto;
+import cdac.egov.qmssvr.entities.Building;
+import cdac.egov.qmssvr.entities.BuildingAudit;
+import cdac.egov.qmssvr.entities.DropdownOption;
+import cdac.egov.qmssvr.repositories.BuildingAuditRepository;
+import cdac.egov.qmssvr.repositories.BuildingRepository;
+import cdac.egov.qmssvr.repositories.DropdownOptionRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
+import java.math.BigDecimal;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
+
+@Service
+public class BuildingService {
+
+    private final BuildingRepository buildings;
+    private final BuildingAuditRepository audits;
+    private final DropdownOptionRepository options;
+    private final JdbcTemplate jdbc;
+    
+
+    @Value("${wamis.upload-dir:uploads}")
+    private String uploadDir;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public BuildingService(
+            BuildingRepository buildings,
+            BuildingAuditRepository audits,
+            DropdownOptionRepository options,
+            JdbcTemplate jdbc) {
+        this.buildings = buildings;
+        this.audits = audits;
+        this.options = options;
+        this.jdbc = jdbc;
+    }
+
+    public Page<Building> list(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                Math.max(page, 0),
+                Math.min(Math.max(size, 1), 100),
+                Sort.by("id").descending());
+
+        return buildings.findAll((root, query, cb) ->
+                cb.isFalse(root.get("deleted")), pageable);
+    }
+
+    public Building get(Long id) {
+        return buildings.findById(id)
+                .filter(building -> !building.isDeleted())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Building not found"));
+    }
+
+    @Transactional
+    public Building create(BuildingRequest request, MultipartFile file)
+            throws IOException {
+
+        validateOptions(request);
+
+        Building building = new Building();
+        applyRequest(building, request);
+
+        building.setWorkId(nextId("work_id_seq"));
+        building.setScopeId(nextId("scope_id_seq"));
+        building.setSubworkId(nextId("subwork_id_seq"));
+
+        saveAttachment(building, file);
+        Building saved = buildings.saveAndFlush(building);
+
+        audit(saved, "Created", "Initial building record created");
+        return saved;
+    }
+
+    @Transactional
+    public Building update(
+            Long id, BuildingRequest request, MultipartFile file)
+            throws IOException {
+
+        Building building = get(id);
+        validateOptions(request);
+
+        String before = snapshot(building);
+        applyRequest(building, request);
+        saveAttachment(building, file);
+
+        Building saved = buildings.saveAndFlush(building);
+        audit(saved, "Updated",
+                "Before: " + before + " | After: " + snapshot(saved));
+
+        return saved;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Building building = get(id);
+        building.setDeleted(true);
+        buildings.saveAndFlush(building);
+        audit(building, "Deleted", "Record soft-deleted");
+    }
+
+    public List<BuildingAudit> auditHistory(Long id) {
+        if (!buildings.existsById(id)) {
+            throw new IllegalArgumentException("Building not found");
+        }
+        return audits.findByBuildingIdOrderByTimestampDesc(id);
+    }
+
+    public List<DropdownOption> dropdown(String category) {
+        return options.findByCategoryAndActiveTrueOrderById(category);
+    }
+
+    private Long nextId(String sequence) {
+        return jdbc.queryForObject(
+                "SELECT nextval('" + sequence + "')", Long.class);
+    }
+
+    private void validateOptions(BuildingRequest request) {
+        boolean maintenanceValid = options
+                .findByCategoryAndActiveTrueOrderById("MAINTENANCE_TYPE")
+                .stream()
+                .anyMatch(o -> o.getLabel().equals(request.maintenanceType()));
+
+        boolean activityValid = options
+                .findByCategoryAndActiveTrueOrderById("BUILDING_ACTIVITY")
+                .stream()
+                .anyMatch(o -> o.getLabel().equals(request.buildingActivity()));
+
+        if (!maintenanceValid || !activityValid) {
+            throw new IllegalArgumentException(
+                    "Invalid maintenance type or building activity");
+        }
+    }
+
+    private void applyRequest(Building b, BuildingRequest r) {
+        b.setBuildingDescription(r.buildingDescription());
+        b.setBuiltUpArea(r.builtUpArea());
+        b.setNumberOfFloors(r.numberOfFloors());
+        b.setNumberOfBasements(r.numberOfBasements());
+        b.setMaintenanceType(r.maintenanceType());
+        b.setBuildingActivity(r.buildingActivity());
+    }
+
+    private void saveAttachment(Building b, MultipartFile file)
+            throws IOException {
+
+        if (file == null || file.isEmpty()) {
+            return;
+        }
+
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new IllegalArgumentException(
+                    "Attachment must not exceed 10 MB");
+        }
+
+        String original = Path.of(file.getOriginalFilename() == null
+                ? "attachment" : file.getOriginalFilename())
+                .getFileName().toString();
+
+        String extension = original.contains(".")
+                ? original.substring(original.lastIndexOf('.')) : "";
+
+        String storedName = java.util.UUID.randomUUID() + extension;
+
+        Path directory = Paths.get(uploadDir).toAbsolutePath().normalize();
+        Files.createDirectories(directory);
+        Path destination = directory.resolve(storedName).normalize();
+
+        if (!destination.startsWith(directory)) {
+            throw new IllegalArgumentException("Invalid attachment path");
+        }
+
+        Files.copy(file.getInputStream(), destination,
+                StandardCopyOption.REPLACE_EXISTING);
+
+        b.setAttachmentName(original);
+        b.setAttachmentPath(destination.toString());
+    }
+
+    private String snapshot(Building b) {
+        return "description=" + b.getBuildingDescription()
+                + ", area=" + b.getBuiltUpArea()
+                + ", floors=" + b.getNumberOfFloors()
+                + ", basements=" + b.getNumberOfBasements()
+                + ", maintenanceType=" + b.getMaintenanceType()
+                + ", buildingActivity=" + b.getBuildingActivity();
+    }
+
+    private void audit(Building b, String remark, String details) {
+        audits.save(new BuildingAudit(
+                b.getId(),
+                remark,
+                "System",
+                "System",
+                "System",
+                details));
+    }
+    
+
+@Transactional(readOnly = true)
+public List<BuildingRevisionDto> revisionHistory(Long id) {
+    if (!buildings.existsById(id)) {
+        throw new IllegalArgumentException("Building not found");
+    }
+
+    AuditReader reader = AuditReaderFactory.get(entityManager);
+
+    List<?> results = reader.createQuery()
+            .forRevisionsOfEntity(Building.class, false, true)
+            .add(org.hibernate.envers.query.AuditEntity.id().eq(id))
+            .addOrder(
+                org.hibernate.envers.query.AuditEntity.revisionNumber()
+                    .desc()
+            )
+            .getResultList();
+
+    List<BuildingRevisionDto> history = new ArrayList<>();
+
+    for (Object result : results) {
+        Object[] row = (Object[]) result;
+
+        Building building = (Building) row[0];
+        org.hibernate.envers.DefaultRevisionEntity revision =
+                (org.hibernate.envers.DefaultRevisionEntity) row[1];
+        RevisionType type = (RevisionType) row[2];
+
+        Map<String, Object> snapshot = new LinkedHashMap<>();
+
+        if (building != null) {
+            snapshot.put("id", building.getId());
+            snapshot.put("workId", building.getWorkId());
+            snapshot.put("scopeId", building.getScopeId());
+            snapshot.put("subworkId", building.getSubworkId());
+            snapshot.put("buildingDescription",
+                    building.getBuildingDescription());
+            snapshot.put("builtUpArea", building.getBuiltUpArea());
+            snapshot.put("numberOfFloors", building.getNumberOfFloors());
+            snapshot.put("numberOfBasements",
+                    building.getNumberOfBasements());
+            snapshot.put("maintenanceType", building.getMaintenanceType());
+            snapshot.put("buildingActivity", building.getBuildingActivity());
+            snapshot.put("deleted", building.isDeleted());
+        }
+
+        history.add(new BuildingRevisionDto(
+        		(long) revision.getId(),
+                Instant.ofEpochMilli(revision.getTimestamp()),
+                type.name(),
+                snapshot
+        ));
+    }
+
+    return history;
+}
+
+public Page<Building> search(
+        int page,
+        int size,
+        String description,
+        String maintenanceType,
+        String buildingActivity,
+        String areaOperator,
+        BigDecimal areaValue,
+        String floorsOperator,
+        Integer floorsValue,
+        String basementsOperator,
+        Integer basementsValue) {
+
+    Pageable pageable = PageRequest.of(
+            Math.max(page, 0),
+            Math.min(Math.max(size, 1), 100),
+            Sort.by("id").descending());
+
+    return buildings.findAll((root, query, cb) -> {
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(cb.isFalse(root.get("deleted")));
+
+        if (description != null && !description.isBlank()) {
+            predicates.add(cb.like(
+                    cb.lower(root.get("buildingDescription")),
+                    "%" + description.trim().toLowerCase() + "%"));
+        }
+
+        if (maintenanceType != null && !maintenanceType.isBlank()) {
+            predicates.add(cb.equal(
+                    root.get("maintenanceType"), maintenanceType));
+        }
+
+        if (buildingActivity != null && !buildingActivity.isBlank()) {
+            predicates.add(cb.equal(
+                    root.get("buildingActivity"), buildingActivity));
+        }
+
+        addComparison(predicates, root, cb,
+                "builtUpArea", areaOperator, areaValue);
+
+        addComparison(predicates, root, cb,
+                "numberOfFloors", floorsOperator, floorsValue);
+
+        addComparison(predicates, root, cb,
+                "numberOfBasements", basementsOperator, basementsValue);
+
+        return cb.and(predicates.toArray(new Predicate[0]));
+    }, pageable);
+}
+
+private <T extends Comparable<? super T>> void addComparison(
+        List<Predicate> predicates,
+        jakarta.persistence.criteria.Root<Building> root,
+        jakarta.persistence.criteria.CriteriaBuilder cb,
+        String field,
+        String operator,
+        T value) {
+
+    if (value == null) {
+        return;
+    }
+
+    if (operator == null || operator.isBlank()) {
+        throw new IllegalArgumentException(
+                "Select a comparison operator for " + field);
+    }
+
+    switch (operator) {
+        case "=" -> predicates.add(cb.equal(root.get(field), value));
+        case "<" -> predicates.add(cb.lessThan(root.get(field), value));
+        case ">" -> predicates.add(cb.greaterThan(root.get(field), value));
+        case "<=" -> predicates.add(cb.lessThanOrEqualTo(root.get(field), value));
+        case ">=" -> predicates.add(cb.greaterThanOrEqualTo(root.get(field), value));
+        default -> throw new IllegalArgumentException(
+                "Invalid comparison operator: " + operator);
+    }
+}
+
+}

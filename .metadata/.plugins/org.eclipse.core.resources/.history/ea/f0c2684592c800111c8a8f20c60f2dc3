@@ -1,0 +1,5 @@
+package cdac.egov.qmssvr.repositories;
+
+public class BuildingAuditRepository {
+
+}

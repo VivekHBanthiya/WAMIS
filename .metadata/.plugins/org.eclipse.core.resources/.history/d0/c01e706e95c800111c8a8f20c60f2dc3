@@ -1,0 +1,5 @@
+package cdac.egov.qmssvr.controllers;
+
+public class BuildingController {
+
+}

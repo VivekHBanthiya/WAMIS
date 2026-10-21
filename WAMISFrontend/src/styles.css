@@ -1,0 +1,1509 @@
+/* You can add global styles to this file, and also import other style files */
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: #f4f3f0;
+    color: #201f1d;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.required {
+    color: red;
+    margin-left: 0.313rem;
+}
+
+.mat-mdc-select,
+.mat-select {
+    font-size: 1rem !important;
+}
+
+mat-panel-title {
+    color: #022a72 !important;
+}
+
+.mat-expansion-panel-header-title {
+    font-weight: 550;
+    font-size: 1rem;
+}
+
+textarea::placeholder {
+    font-size: 1rem;
+}
+
+.mat-mdc-raised-button,
+.mat-raised-button {
+    border-radius: 0.313rem !important;
+}
+
+.orgLogo {
+    height: 100px;
+    width: 100px;
+}
+
+.snackbar-danger {
+    margin-top: 25% !important;
+    padding: 0.625rem !important;
+    font-size: 1.563rem !important;
+    background-color: #f8d7da !important;
+    border-color: #f5c6cb !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.snackbar-success {
+    margin-top: 40% !important;
+    padding: 0.625rem !important;
+    font-size: 1.563rem;
+    background-color: #d4edda !important;
+    border-color: #c3e6cb !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.snackbar-success .mdc-button__label,
+.snackbar-success .mat-button-wrapper {
+    color: black !important;
+}
+
+.snackbar-danger .mdc-button__label,
+.snackbar-danger .mat-button-wrapper {
+    color: black !important;
+}
+
+.form-label-span {
+    color: #505050 !important;
+    font-weight: 550 !important;
+    font-size: 1rem !important;
+}
+
+.button-color {
+    background: #022a72;
+    margin-left: 0.625rem !important;
+    color: white;
+    margin-top: 0.313rem !important;
+}
+
+.cancel-button-color {
+    background: #f44336;
+    margin-left: 0.625rem !important;
+    color: white;
+    margin-top: 0.313rem !important;
+}
+
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
+    z-index: 9999 !important;
+}
+
+.modal-sm {
+    max-width: 50%;
+}
+
+.mat-mdc-tab-link,
+.mat-tab-link {
+    height: 48px;
+    padding: 0 40px !important;
+    cursor: pointer;
+    box-sizing: border-box;
+    opacity: 2 !important;
+    color: #505050 !important;
+    min-width: 0px !important;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    vertical-align: top;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.mat-mdc-tab-link.mdc-tab--active,
+.mat-tab-label-active {
+    color: rgba(1, 1, 1, 1) !important;
+}
+
+.mat-mdc-tab-nav-bar.mat-primary .mdc-tab-indicator__content,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #022a72;
+}
+
+
+.custom-display-alert {
+    padding: .50rem !important;
+    background-color: #f8d674 !important;
+    color: #505050 !important;
+    font-size: 0.875rem !important;
+    width: max-content !important;
+    text-align: center;
+    margin-top: 0.313rem !important;
+}
+
+
+
+
+.mat-mdc-form-field,
+.mat-form-field {
+    width: 100%;
+}
+
+/*table*/
+
+.mat-mdc-table,
+.mat-table {
+    border-spacing: 0 15px !important;
+    padding-left: 0px;
+    padding-right: 0px;
+    border: 1px;
+}
+
+.custom-scrollable-div {
+    height: 60ex;
+    overflow-y: auto;
+}
+
+.mat-mdc-row:nth-child(2n),
+.mat-row:nth-child(2n) {
+    background-color: #f2fbff;
+}
+
+.mat-mdc-header-cell
+{
+    font-size: 0.875rem;
+    background-color: #e1f6fb !important;
+    color: #505050 !important;
+    justify-content: center;
+    min-width: 6.875rem;
+    text-align: center !important;
+}
+
+.mat-mdc-row,
+.mat-row {
+    min-width: 48.125rem;
+    background-color: #fcfeff;
+}
+
+.mat-mdc-cell.mat-cell-lg,
+.mat-cell-lg {
+    min-width: 6.875rem;
+    border: 0.5px solid #e1f6fb;
+    justify-content: center !important;
+}
+
+.mat-mdc-header-cell:first-child,
+.mat-header-cell:first-child {
+    border-top-left-radius: 0.625rem;
+}
+
+.mat-mdc-header-cell:last-child,
+.mat-header-cell:last-child {
+    border-top-right-radius: 0.625rem;
+}
+
+.margin {
+    margin-bottom: 0.625rem;
+}
+
+.right-margin {
+    margin-right: 0.625rem;
+}
+
+.left-margin {
+    margin-left: 0.625rem;
+}
+
+.top-margin {
+    margin-top: 0.625rem;
+}
+
+.form {
+    min-width: 9.375rem;
+    max-width: 31.25rem;
+    width: 100%;
+}
+
+.card {
+    max-width: 80%;
+    margin: 2em auto;
+    text-align: center;
+}
+
+.datepickerColor {
+    background-color: #004085;
+    color: #FFF;
+}
+
+.panel {
+    background: rgb(176, 176, 228);
+
+}
+
+.ripple {
+    background: #f8f9fa !important;
+}
+
+.form-element {
+    padding: 0.313rem 0rem 1.563rem 0.125rem;
+    width: 100%;
+}
+
+.buttons {
+    width: 6.25rem;
+    margin: 0 auto;
+    display: inline;
+    margin-right: 0.5rem;
+}
+
+.action_btn {
+    width: 6.25rem;
+    margin: 0 auto;
+    display: inline;
+    background-color: darkgrey;
+}
+
+.icon {
+    font-size: 1.25rem !important;
+    color: #1e1e26;
+}
+
+.view-icon {
+    font-size: 1.25rem !important;
+}
+
+.icon:hover {
+    color: #224584;
+}
+
+.mat-mdc-select-placeholder,
+mat-select-placeholder {
+    color: rgba(228, 241, 240, 0.918);
+    font-size: 0.875rem;
+}
+
+.align-left-text {
+    text-align: left;
+    padding-left: 10px;
+}
+
+.align-center-text {
+    text-align: center !important;
+}
+
+.justify-left-text {
+    justify-content: left;
+}
+
+.table-padding {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+}
+
+.prefix {
+    width: 15% !important;
+}
+
+.suffix {
+    width: 85% !important;
+}
+
+.search-icon {
+    margin-top: 1.25rem !important;
+}
+
+.mat-mdc-form-field.mat-form-field-disabled .mat-mdc-text-field-wrapper,
+.mat-form-field-disabled .mat-form-field-flex {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+/* Text colour only. The 0.8rem/0.4em padding that used to live here was the
+   upgrade's mis-translation of v14's `.mat-form-field-appearance-legacy
+   .mat-form-field-infix { padding: .8rem 0 .4em }` - in v14 that padded the
+   infix CONTAINER and only for legacy appearance, which these outline fields
+   never were. Re-pointed at .mdc-text-field__input it stacked on top of MDC's
+   own 16px infix padding, inflating every field from 56px to 75px. */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mdc-text-field__input,
+.mat-mdc-form-field.mat-form-field-appearance-fill .mdc-text-field__input {
+    color: #201f1d;
+}
+
+.mdc-text-field__input:disabled,
+.mat-input-element:disabled,
+.mat-mdc-input-element:disabled {
+    color: rgba(0, 0, 0, 0.90) !important;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.90) !important;
+    opacity: 1 !important;
+}
+
+.custom-padding {
+    padding: 0.6% 0.3% 2.6% 0.6% !important;
+}
+
+.mat-expansion-panel-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 998 !important;
+}
+
+/* Material 14 laid tables out with flexbox, so `justify-content: center` on a
+   cell centred its content. Material 22 uses a real CSS table (table-layout:
+   auto, cells are display: table-cell), where justify-content does nothing -
+   leaving data left-aligned under centred headers. text-align is the table-
+   model equivalent. Declared after .align-left-text so it wins on source order
+   without needing !important. */
+.text-align {
+    justify-content: center !important;
+    text-align: center;
+}
+
+.inspect-btn-lg {
+    margin-top: 0.313rem !important;
+    font-size: 0.625rem !important;
+    padding-left: 31.25rem !important;
+}
+
+.file-field {
+    border: 0.125rem !important;
+    border-style: groove !important;
+    border-color: #ced4da !important;
+    opacity: inherit !important;
+    border-radius: 0.313rem !important;
+    margin-right: 0.625rem !important;
+    margin-left: 0.625rem !important;
+    margin-top: 1.50rem !important;
+    margin-bottom: 1.375rem !important;
+    border-width: thin !important;
+    display: block !important;
+    position: relative !important;
+    flex: auto !important;
+    min-width: 0 !important;
+    width: 11.25rem !important;
+    height: 53px !important;
+}
+
+.file-field-1 {
+    padding-top: 0.313rem !important;
+    padding-bottom: 0.313rem !important;
+}
+
+.file-field:hover {
+    border: 0.125rem solid black !important;
+    border-radius: 0.313rem !important;
+}
+
+.custom-btn {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+table {
+    width: 100% !important;
+}
+
+.table-bordered td {
+    padding-left: 0.5em !important;
+    padding-right: 0.5em !important;
+}
+
+table td:first-child {
+    border-spacing: 0 0 !important;
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 0.001rem solid !important;
+    border-color: #c2c2d6 !important
+}
+
+/*LOGIN AVTAR*/
+.profile-img {
+    margin-top: 0.188rem !important;
+}
+
+.uxg-caption {
+    font: 400 0.75rem/1.125rem Roboto, roboto, "Helvetica Neue", sans-serif !important;
+    letter-spacing: normal;
+}
+
+.mat-typography {
+    font: 0 !important;
+    letter-spacing: normal !important;
+}
+
+.avatar-title {
+    margin: 0.125rem 0.125rem 0.125rem;
+}
+
+.h6-caption-padding {
+    margin-top: 0.375rem;
+    margin-left: 0.188rem;
+    margin-right: 0.5rem;
+}
+
+.custom-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.custom-row>* {
+    flex-shrink: 0 !important;
+}
+
+.uxg-h6,
+.uxg-typography {
+    font-weight: 600 !important;
+    letter-spacing: normal;
+    margin-bottom: 0rem !important;
+}
+
+.uxg-user-profile .uxg-menu-header,
+.uxg-user-profile .uxg-menu-footer {
+    padding: 0.625rem;
+}
+
+.login-name {
+    color: #505050;
+}
+
+.avatar {
+    height: 3rem;
+    width: 3rem;
+    margin: 0.25rem;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-logout-button {
+    width: 100%;
+    background-color: #3f51b5;
+    color: #ffffff;
+}
+
+.mat-mdc-slide-toggle.mat-mdc-slide-toggle-checked .mdc-switch__thumb,
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #3f51b5 !important;
+}
+
+.mat-mdc-slide-toggle.mat-mdc-slide-toggle-checked .mdc-switch__track,
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: rgb(102, 100, 212) !important;
+}
+
+.profile-logout-icon {
+    color: #ffffff !important;
+}
+
+.profile-unit-icon {
+    padding-top: 1.4375rem;
+    padding-left: .3125rem;
+}
+
+.title-center {
+    flex: 1 1 auto;
+    text-align: end;
+}
+
+.display-none {
+    display: none !important;
+}
+
+.item-details-row {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.margin-left-right-zero {
+    margin-left: 0rem !important;
+    margin-right: 0rem !important;
+}
+
+.padding-left-20 {
+    padding-left: 1.25rem;
+}
+
+.mat-card-padding {
+    padding: 5px;
+}
+
+.dialog-content {
+    font-size: 15px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 500;
+    padding: 2px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.close-button {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-weight: 900;
+    background-color: #180085;
+    color: rgb(15, 10, 10);
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.search {
+    display: flex;
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
+    border-radius: 3.125rem;
+    background: #f5f8fd;
+    margin-right: 0.125rem;
+    margin-left: 0.125rem;
+    height: 1.875rem;
+}
+
+.search-div-width-content {
+    width: 70% !important;
+    padding-top: 0.313rem !important;
+    color: #505050 !important;
+
+    padding-left: 1rem;
+}
+
+.search-div-width-icon {
+    width: 30% !important;
+    padding-top: 0.313rem !important;
+    padding-right: 0.5rem;
+}
+
+.margin-left-20 {
+    margin-left: 1.25rem;
+}
+
+.padding-left-0 {
+    padding-left: 0rem !important;
+}
+
+.padding-right-0 {
+    padding-right: 0rem !important;
+}
+
+.margin-top-10 {
+    margin-top: 0.625rem !important;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 0.625rem !important;
+}
+
+.margin-left-60 {
+    margin-left: 3.75rem;
+}
+
+.width-90-per {
+    width: 90% !important;
+}
+
+.pointer-cursor {
+    cursor: pointer;
+}
+
+span.alert-link:hover {
+    text-decoration: underline !important;
+}
+
+.modal-lg,
+.modal-xl {
+    --bs-modal-width: 95% !important;
+}
+
+.left-float {
+    float: left;
+}
+
+.mat-mdc-dialog-container,
+.mat-dialog-container {
+    overflow: hidden !important;
+    padding: 0.375rem !important;
+}
+
+.width-100 {
+    width: 6.25rem;
+}
+
+.mat-mdc-radio-button .mdc-label,
+.mat-radio-label {
+    cursor: pointer;
+    white-space: nowrap;
+    padding-right: 10px;
+}
+
+.mdc-radio__outer-circle,
+mat-radio-outer-circle {
+    border-color: #022a72;
+}
+
+.mdc-radio__inner-circle,
+mat-radio-inner-circle {
+    border-color: #022a72;
+}
+
+.popover-header {
+    margin-bottom: 0rem !important;
+}
+
+.left-padding {
+    padding-left: 0.675rem;
+}
+
+.tab-css mat-tab-label-active {
+    background-color: rgb(102, 100, 212);
+}
+
+.mat-mdc-select-disabled .mat-mdc-select-value,
+.mat-select-disabled .mat-select-value {
+    color: rgb(30, 27, 27);
+}
+
+/*------------------------*/
+
+@media(max-width: 41.25rem) {
+
+    mat-radio-outer-circle {
+        border-color: #022a72;
+    }
+
+    mat-radio-inner-circle {
+        border-color: #022a72;
+    }
+
+    .mobile-label {
+        color: #464646 !important;
+        float: inline-start;
+        padding-left: 0.625rem;
+        min-width: 10.625rem;
+        padding-right: 0.625rem;
+        font-weight: initial;
+        width: min-content;
+        text-align: left;
+    }
+
+    .help-mobile-label {
+        display: flex;
+        color: #150f0f !important;
+        float: inline-start;
+        text-align: right;
+        padding-left: 0.625rem;
+        min-width: 10.625rem;
+        padding-right: 0.625rem;
+
+    }
+
+    mat-cell:first-of-type,
+    mat-header-cell:first-of-type,
+    mat-footer-cell:first-of-type,
+    .mat-mdc-cell:first-of-type,
+    .mat-mdc-header-cell:first-of-type,
+    .mat-mdc-footer-cell:first-of-type {
+        padding-left: 0rem !important;
+    }
+
+    .mat-mdc-cell,
+    .mat-cell {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .button-margin {
+        margin-left: 10px;
+    }
+
+    td.mat-mdc-cell,
+    td.mat-cell {
+        padding-left: 5px !important;
+        text-align: center !important;
+        border-bottom-width: 0rem !important;
+    }
+
+    .mat-mdc-row,
+    .mat-row {
+        /* Material 22 rows are display: table-row, so the flex card layout
+           below needs the row switched back to flex explicitly. */
+        display: flex;
+        min-height: 1.563rem;
+        flex-direction: column;
+        align-items: start;
+        padding: 0.5rem 1.5rem;
+        padding-left: 0rem;
+        padding-right: 0rem;
+        width: 100%;
+        min-width: 100%;
+        background-color: #fcfeff;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    }
+
+    /* .mat-header-cell {
+        background-color: #e1f6fb !important;
+    } */
+
+    .custom-mat-icon {
+        font-size: 1.25rem !important;
+    }
+
+    .mat-card-padding {
+        padding: 5px;
+    }
+
+    .dialog-content {
+        font-size: 15px;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-weight: 500;
+        padding: 2px;
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-weight: 900;
+        background-color: #180085;
+        color: rgb(15, 10, 10);
+        border-radius: 50%;
+        padding: 2px;
+    }
+
+    .cell-data {
+        width: 80%;
+        text-align: left;
+    }
+
+    .modal-footer {
+        justify-content: flex-start !important;
+    }
+
+    .mat-mdc-row:nth-child(2n),
+    .mat-row:nth-child(2n) {
+        background-color: #f2fbff;
+    }
+
+    .mat-mdc-header-row,
+    .mat-header-row {
+        display: none;
+    }
+
+    .align-text {
+        justify-content: right;
+    }
+
+    .mobile-label-data {
+        color: #022a72 !important
+    }
+
+    .footer-margin {
+        margin-bottom: 50px !important;
+    }
+
+    .view-icon {
+        font-size: 1.25rem !important;
+    }
+
+    .mat-mdc-table,
+    .mat-table {
+        border-collapse: separate;
+        border-spacing: 0 15px !important;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .panel-body .mat-expansion-panel-body {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .option {
+        width: 20%;
+    }
+
+    .option-inside-icon-padding {
+        padding-left: 15px !important;
+    }
+
+    .option-inside-icon-title-padding {
+        padding-left: 20px !important;
+    }
+    .mat-mdc-icon-button,
+    .mat-icon-button {
+        padding: 0;
+        min-width: 0;
+        flex-shrink: 0;
+        line-height: 2.5rem;
+        border-radius: 50%;
+        width: 0rem;
+    }
+
+    .mat-icon {
+        width: fit-content !important;
+    }
+
+    .table-border-spacing {
+        border-collapse: separate;
+        border-spacing: 0 25px !important;
+    }
+
+    .height-400 {
+        height: 25rem;
+    }
+
+
+    .none-border {
+        border: none !important;
+
+    }
+
+    .mobile-action {
+        text-align: left !important;
+        font-size: medium;
+        padding-top: 0.625rem;
+        padding-bottom: 0.313rem;
+    }
+
+
+    .transactionl-details-row {
+        height: fit-content !important;
+        padding: 0.313rem !important;
+    }
+
+
+    .modal-lg,
+    .modal-xl {
+        --bs-modal-width: 95% !important;
+    }
+
+    .button-padding-50 {
+        padding-bottom: 3.125rem !important;
+    }
+
+    .padding-left-1 {
+        padding-left: 0.0625rem;
+    }
+
+    .mat-mdc-radio-button .mdc-label,
+    .mat-radio-label {
+        cursor: pointer;
+        white-space: nowrap;
+        padding-right: 10px;
+    }
+
+}
+
+.margin-all-10 {
+    margin: 0.625rem !important;
+}
+
+.zoomIcon {
+    display: inline-block;
+}
+
+.heading-title {
+    display: inline-block;
+    margin-left: 1.25rem !important;
+}
+
+.component-border {
+    border: 0.125rem solid rgb(151, 134, 212);
+    border-radius: 0.625rem;
+}
+
+.margin-left-10 {
+    margin-left: 0.625rem !important;
+}
+
+.text-alignment {
+    text-align: center !important;
+}
+
+.margin-top-60 {
+    margin-top: 3.75rem;
+}
+
+.icon-with-input {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.icon-with-input mat-icon {
+    margin-right: 0.5rem !important;
+}
+
+.custom-list {
+    font-weight: 550 !important;
+    font-size: 14px !important;
+}
+
+
+.upperDiv {
+    border: 0.063rem solid #3293E8;
+    margin: 0.313rem 0.313rem 0.313rem 0.313rem;
+    background-color: #f7fafb;
+    width: 99%
+}
+
+.lowerDiv {
+    width: 100%;
+    padding: 0.313rem 0.313rem 0.313rem 0.313rem;
+    background-color: white;
+    border-top: 0.063rem #3293E8;
+    border-left: 0.063rem #3293E8;
+    border-right: 0.063rem #3293E8;
+}
+
+.div-heading-align {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-button-container {
+    position: relative;
+}
+
+.filter-button-container button {
+    margin-left: auto;
+}
+
+.chartSize {
+    height: 21rem !important;
+}
+
+.searchIcon {
+    font-size: 1.125rem !important;
+}
+
+.display-contents-custom {
+    display: contents !important;
+}
+
+.float-right-custom {
+    float: right !important;
+}
+
+.text-align-padding-top-custom {
+    text-align: right !important;
+    padding-top: 20px !important;
+}
+
+.text-align-end-custom {
+    text-align: end !important;
+}
+
+.justify-content-word-wrap-white-space-custom {
+    justify-content: center !important;
+    text-align: center;
+    word-wrap: anywhere !important;
+    white-space: normal !important;
+}
+
+.padding-top-custom {
+    padding-top: 0rem !important;
+}
+
+.white-space-font-size-custom {
+    white-space: pre-line !important;
+    font-size: large !important;
+}
+
+.margin-top-custom {
+    margin-top: 0.938rem;
+}
+
+.title-name-custom {
+    margin-top: -0.563rem !important;
+    margin-bottom: -0.563rem !important;
+    margin-left: -0.563rem !important;
+}
+
+.close {
+    background: #dee2e6;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.mat-column-srno {
+    width: 4.688rem !important;
+    text-align: center !important;
+}
+
+.overflow-overlay-custom {
+    overflow: overlay !important;
+}
+
+/* =========================================================================
+   Material 14 -> 22 visual compatibility layer
+
+   Angular Material 15+ replaced the legacy components with MDC ones. The MDC
+   specification introduces letter-spacing ("tracking") on every text element
+   and enlarges several control metrics. Material 14 had neither, so without
+   this block every label, button and menu item renders wider and looser than
+   it did before the upgrade.
+
+   Tokens are declared on `html` by the prebuilt theme, which the bundler
+   inlines above these rules - so an `html` block here wins on source order.
+   ========================================================================= */
+
+html {
+    /* --- MDC tracking: Material 14 used normal letter-spacing throughout --- */
+    --mat-bottom-sheet-container-text-tracking: normal;
+    --mat-button-filled-label-text-tracking: normal;
+    --mat-button-outlined-label-text-tracking: normal;
+    --mat-button-protected-label-text-tracking: normal;
+    --mat-button-text-label-text-tracking: normal;
+    --mat-button-toggle-label-text-tracking: normal;
+    --mat-button-toggle-legacy-label-text-tracking: normal;
+    --mat-button-tonal-label-text-tracking: normal;
+    --mat-card-subtitle-text-tracking: normal;
+    --mat-card-title-text-tracking: normal;
+    --mat-checkbox-label-text-tracking: normal;
+    --mat-chip-label-text-tracking: normal;
+    --mat-dialog-subhead-tracking: normal;
+    --mat-dialog-supporting-text-tracking: normal;
+    --mat-expansion-container-text-tracking: normal;
+    --mat-expansion-header-text-tracking: normal;
+    --mat-fab-extended-label-text-tracking: normal;
+    --mat-form-field-container-text-tracking: normal;
+    --mat-form-field-filled-label-text-tracking: normal;
+    --mat-form-field-outlined-label-text-tracking: normal;
+    --mat-form-field-subscript-text-tracking: normal;
+    --mat-list-list-item-label-text-tracking: normal;
+    --mat-list-list-item-supporting-text-tracking: normal;
+    --mat-list-list-item-trailing-supporting-text-tracking: normal;
+    --mat-menu-item-label-text-tracking: normal;
+    --mat-optgroup-label-text-tracking: normal;
+    --mat-option-label-text-tracking: normal;
+    --mat-paginator-container-text-tracking: normal;
+    --mat-radio-label-text-tracking: normal;
+    --mat-select-trigger-text-tracking: normal;
+    --mat-slide-toggle-label-text-tracking: normal;
+    --mat-slider-label-label-text-tracking: normal;
+    --mat-tab-label-text-tracking: normal;
+    --mat-table-footer-supporting-text-tracking: normal;
+    --mat-table-header-headline-tracking: normal;
+    --mat-table-row-item-label-text-tracking: normal;
+    --mat-toolbar-title-text-tracking: normal;
+    --mat-tooltip-supporting-text-tracking: normal;
+
+    /* --- control metrics returned to their Material 14 values --- */
+    --mat-table-row-item-container-height: 48px; /* v22 ships 52px */
+    --mat-list-list-item-one-line-container-height: 40px;  /* v14 dense */
+    --mat-list-list-item-two-line-container-height: 48px;
+}
+
+/* The 48px icon-button size is declared on .mat-mdc-icon-button.mat-mdc-button-base,
+   not on html, so it has to be overridden at the same specificity. v14 used 40px. */
+.mat-mdc-icon-button.mat-mdc-button-base {
+    --mat-icon-button-state-layer-size: 40px;
+    /* Material hardcodes `padding: 12px` on this selector, which is correct for
+       its own 48px box but leaves a 16px content area once the box is 40px -
+       the 24px icon then sits at the top of that area and overflows downward,
+       landing 4px below the centre of the field. (40 - 24) / 2 = 8px. */
+    padding: 8px;
+}
+
+/* =========================================================================
+   MDC behaviour fixes (Material 14 -> 22)
+   ========================================================================= */
+
+/* 1. Tab bars. Material 22 defaults `stretchTabs` to true, so
+      .mat-mdc-tab-link gets `flex-grow: 1` and the Add/View links spread
+      across the full width. Material 14 sized them to their content. */
+.mat-mdc-tab-links {
+    flex: 0 1 auto !important;
+    justify-content: flex-start !important;
+}
+
+.mat-mdc-tab-link {
+    flex-grow: 0 !important;
+}
+
+/* 2. Slide toggle. The MDC switch paints its handle through design tokens on
+      .mdc-switch__handle::after, not via background-color on .mdc-switch__thumb,
+      so the old override missed and the theme accent (#ff4081 pink) showed
+      through. The pink is declared on `.mat-mdc-slide-toggle.mat-accent`, so the
+      accent selector has to be matched exactly to win on source order. */
+.mat-mdc-slide-toggle,
+.mat-mdc-slide-toggle.mat-accent {
+    --mat-slide-toggle-selected-handle-color: #3f51b5;
+    --mat-slide-toggle-selected-hover-handle-color: #3f51b5;
+    --mat-slide-toggle-selected-focus-handle-color: #3f51b5;
+    --mat-slide-toggle-selected-pressed-handle-color: #3f51b5;
+    --mat-slide-toggle-selected-track-color: rgb(102, 100, 212);
+    --mat-slide-toggle-selected-hover-track-color: rgb(102, 100, 212);
+    --mat-slide-toggle-selected-focus-track-color: rgb(102, 100, 212);
+    --mat-slide-toggle-selected-pressed-track-color: rgb(102, 100, 212);
+    --mat-slide-toggle-selected-track-outline-color: rgb(102, 100, 212);
+    --mat-slide-toggle-selected-focus-state-layer-color: #3f51b5;
+    --mat-slide-toggle-selected-hover-state-layer-color: #3f51b5;
+    --mat-slide-toggle-selected-pressed-state-layer-color: #3f51b5;
+    --mat-slide-toggle-selected-icon-color: #ffffff;
+}
+
+/* 3. Raised buttons. Material 22 paints them from
+      `.mat-mdc-raised-button:not(:disabled)` - specificity (0,2,0), which beats
+      `.button-color` (0,1,0), so the app background was being overridden. Set
+      the tokens instead of escalating specificity: custom properties inherit,
+      so MDC's own rule reads these values. The disabled state uses separate
+      `-disabled-` tokens and is left on the Material default, matching v14. */
+.button-color {
+    --mat-button-protected-container-color: #022a72;
+    --mat-button-protected-label-text-color: #ffffff;
+}
+
+.cancel-button-color {
+    --mat-button-protected-container-color: #f44336;
+    --mat-button-protected-label-text-color: #ffffff;
+}
+
+.profile-logout-button {
+    --mat-button-filled-container-color: #3f51b5;
+    --mat-button-filled-label-text-color: #ffffff;
+}
+
+/* matInput used outside a mat-form-field (read-only <textarea matInput> in
+   table cells). Material 14 reset .mat-input-element globally; Material 22
+   scopes its reset to .mdc-text-field__input inside .mat-mdc-form-field, so a
+   bare matInput falls back to the browser default border/background. */
+.mat-mdc-input-element:not(.mdc-text-field__input) {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    resize: none;
+    outline: none;
+    width: 100%;
+}
+
+/* Material font stack. Material requests `Roboto, sans-serif`, but Roboto is
+   not bundled or linked anywhere, so every Material component silently fell
+   back to Arial while the rest of the app renders in Bootstrap's system stack
+   (Segoe UI on Windows) - two typefaces side by side. Point Material at the
+   same stack the app body uses so the UI reads as one font. */
+html {
+    --mat-badge-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-bottom-sheet-container-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-filled-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-outlined-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-protected-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-text-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-toggle-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-toggle-legacy-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-button-tonal-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-card-subtitle-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-card-title-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-checkbox-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-chip-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-datepicker-calendar-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-dialog-subhead-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-dialog-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-expansion-container-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-expansion-header-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-fab-extended-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-form-field-container-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-form-field-filled-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-form-field-outlined-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-form-field-subscript-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-list-list-item-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-list-list-item-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-list-list-item-trailing-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-menu-item-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-optgroup-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-option-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-paginator-container-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-radio-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-select-trigger-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-slide-toggle-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-slider-label-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-snack-bar-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-stepper-container-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-stepper-header-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-tab-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-table-footer-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-table-header-headline-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-table-row-item-label-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-toolbar-title-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-tooltip-supporting-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    --mat-tree-node-text-font: var(--bs-body-font-family, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+}
+
+/* MIS dashboard chart-type-dropdown icon triggers. These three selects use
+   `display: contents` on the form field so only the icon shows in the panel
+   toolbar. Material 22 wraps the control in .mat-mdc-text-field-wrapper with
+   16px horizontal padding, which left 12.5px of a 44.5px box for a 24px
+   mat-icon - the icons were clipped away. Strip the MDC chrome for these
+   fields only (higher specificity than Material's own single-class rules,
+   so no !important needed). */
+.display-contents-custom .mat-mdc-text-field-wrapper {
+    padding: 0;
+}
+
+.display-contents-custom .mat-mdc-form-field-infix {
+    padding: 0;
+    min-height: 0;
+    width: auto;
+    min-width: 24px;
+}
+
+.display-contents-custom .mat-mdc-form-field-subscript-wrapper,
+.display-contents-custom .mdc-notched-outline {
+    display: none;
+}
+
+/* Panel for the chart-type icon triggers above. Material sizes a select panel
+   to the width of its form field, and those fields are only 24px wide (icon
+   only), so the options were clipped to a single character. Scoped via
+   panelClass so other select panels keep Material's default sizing. */
+.cdk-overlay-pane:has(.chart-type-panel),
+.mat-mdc-select-panel.chart-type-panel {
+    min-width: max-content;
+}
+
+/* Checkbox colour. Material 22 paints the box from
+   `.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background`
+   - specificity (0,4,0), which outranks the app rule at (0,3,0), so the
+   #022a72 override never applied. Indeterminate has no host class at all in
+   v22 (it is driven by the input's :indeterminate pseudo-class), so the old
+   .mat-checkbox-indeterminate selector could never match either. Setting the
+   tokens covers both states without a specificity fight. */
+.mat-mdc-checkbox,
+.mat-mdc-checkbox.mat-accent {
+    --mat-checkbox-selected-icon-color: #022a72;
+    --mat-checkbox-selected-hover-icon-color: #022a72;
+    --mat-checkbox-selected-focus-icon-color: #022a72;
+    --mat-checkbox-selected-pressed-icon-color: #022a72;
+    --mat-checkbox-selected-focus-state-layer-color: #022a72;
+    --mat-checkbox-selected-hover-state-layer-color: #022a72;
+    --mat-checkbox-selected-pressed-state-layer-color: #022a72;
+    --mat-checkbox-selected-checkmark-color: #ffffff;
+}
+
+/* Drawer navigation labels. menu-bar and submenu-bar wrap each label in a bare
+   <ul> inside a <mat-list-item>. The browser UA stylesheet gives <ul> a
+   margin-block-end of 16px; Material 14 absorbed it, but Material 22 renders
+   .mdc-list-item__content as display:block, so that margin pushed every label
+   to the top of its 40px row and left a 16px gap underneath. Zeroing the block
+   margin restores vertical centring. Horizontal padding is left alone - it is
+   what indents submodule entries under their parent. */
+.mat-mdc-list-item ul {
+    margin-block: 0;
+}
+
+/* Snackbars. Material 22 paints the visible surface on an inner
+   .mdc-snackbar__surface from --mat-snack-bar-container-color (default
+   #424242), while panelClass lands on the outer panel - so the app's
+   background-color sat behind the surface and every snackbar rendered dark.
+   The label and action colours/size come from tokens too, which is why the
+   panel-level font-size and the .mdc-button__label rules stopped landing.
+   Setting the tokens restores the pre-upgrade look: light tinted surface,
+   dark text, at the original size. */
+.snackbar-success,
+.snackbar-danger {
+    --mat-snack-bar-supporting-text-color: #000000;
+    --mat-snack-bar-supporting-text-size: 1.563rem;
+    --mat-snack-bar-button-color: #000000;
+}
+
+.snackbar-success {
+    --mat-snack-bar-container-color: #d4edda;
+}
+
+.snackbar-danger {
+    --mat-snack-bar-container-color: #f8d7da;
+}
+
+/* Snackbar box geometry. In Material 14 the panel itself was the coloured box,
+   so the app's `padding: 0.625rem` was inner padding. In Material 22 the
+   colour lives on an inner .mdc-snackbar__surface, so that padding now wraps
+   the surface and renders as a transparent margin/border around it. Move the
+   spacing inside, onto MDC's label, to restore the v14 box. */
+.snackbar-success,
+.snackbar-danger {
+    padding: 0 !important;
+}
+
+.snackbar-success .mdc-snackbar__label,
+.snackbar-danger .mdc-snackbar__label {
+    padding: 0.625rem;
+}
+
+/* NOTE: `border-color` is also declared on these panels with no border-style or
+   border-width, so it never painted a border in either branch - it is inert. */
+
+/* Snackbar border. Material 14 shipped `.mat-snack-bar-container { border: solid
+   1px }`, so the app's `border-color` painted a real 1px tinted outline. The
+   Material 22 surface has no border at all, which left border-color inert and
+   the box outline missing. v14 supplied `border: solid 1px`; restore it on the
+   surface, which is the element that now carries the colour. */
+.snackbar-success .mdc-snackbar__surface,
+.snackbar-danger .mdc-snackbar__surface {
+    border: solid 1px;
+}
+
+.snackbar-success .mdc-snackbar__surface {
+    border-color: #c3e6cb;
+}
+
+.snackbar-danger .mdc-snackbar__surface {
+    border-color: #f5c6cb;
+}
+
+/* mat-error / hint strip. Material 14 rendered this as
+   `position: absolute; overflow: hidden`, so a long message was clipped to a
+   single line and never pushed the rest of the form down. Material 22 puts it
+   in normal flow, so a wrapping error grows the field and shifts everything
+   below it. Total field height already matches v14 (56px + 22px); the only
+   difference was the wrapping, so cap the strip at one line and clip - v14
+   clipped the subscript the same way. max-height (not height) is used so
+   fields that reserve no subscript space, such as the paginator page-size
+   select, are unaffected. */
+.mat-mdc-form-field-subscript-wrapper {
+    max-height: 22px;
+    overflow: hidden;
+}
+
+/* Table cell centring, specificity note. `.text-align` and `.mdc-data-table__cell`
+   are both single-class selectors, but Material 22 ships the latter as a
+   component style - Angular injects component styles into <head> AFTER the
+   linked styles.css, so `.mdc-data-table__cell { text-align: start }` won on
+   source order and the cells stayed left-aligned under centred headers.
+   Pairing with .mat-mdc-cell raises these to (0,2,0) so they win on specificity
+   rather than needing !important. */
+.mat-mdc-cell.text-align,
+.mat-mdc-cell.justify-content-word-wrap-white-space-custom {
+    text-align: center;
+}
+
+/* Header account avatar button. Material 14 gave icon buttons
+   `padding: 0; line-height: 40px`, which let the Bootstrap `.rounded-circle`
+   initials div fill the full 40x40 button and render as a circle. Material 22
+   drops the line-height and relies on padding, so the div was squeezed to
+   24px wide by the content box while its text forced 32px of height - a 24x32
+   box at border-radius 50% is an ellipse. Scoped to the account avatar button
+   so the 8px padding that centres ordinary suffix icons stays untouched. */
+.login-name .mat-mdc-icon-button.mat-mdc-button-base {
+    padding: 0;
+    line-height: 40px;
+}
+
+/* Icon-button glyph centring. Bootstrap's reboot applies
+   `button { line-height: inherit }`, so a Material icon button inherits its
+   ancestor's line-height. Where that is the unitless 1.5 (Bootstrap's body
+   default) it resolves against the button's own 24px font to 36px, and the
+   glyph is pushed ~4px below centre - visible in the Assign Operations tree
+   and on any icon button also carrying Bootstrap's .btn. Table cells set a
+   length line-height, which is why those were unaffected. Pinning to 1 makes
+   the line box match the glyph regardless of context. */
+.mat-mdc-icon-button.mat-mdc-button-base {
+    line-height: 1;
+}
+
+/* Confirmation dialog card spacing. Material 14 shipped
+   `.mat-card-content { margin-bottom: 16px }` with no padding; Material 22 uses
+   `padding: 0 16px` plus 16px top and bottom as first/last child - 32px of new
+   vertical space. The confirmation dialogs open at a hardcoded height (200px),
+   so that extra space pushed the content past the surface and produced a
+   scrollbar inside a two-line Are-you-sure box. Restores the v14 geometry,
+   scoped to dialogs so cards elsewhere keep Material 22 spacing.
+   Material also sets `:first-child { padding-top: 16px }` and
+   `:last-child { padding-bottom: 16px }` at the same (0,2,0) specificity as a
+   plain descendant rule, and its component styles are injected after
+   styles.css - so those pseudo-class variants have to be matched explicitly to
+   win. */
+.mat-mdc-dialog-surface .mat-mdc-card-content,
+.mat-mdc-dialog-surface .mat-mdc-card-content:first-child,
+.mat-mdc-dialog-surface .mat-mdc-card-content:last-child {
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.building-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+  padding: 12px;
+}
+
+.building-form-grid .form-element {
+  padding: 0;
+  min-width: 0;
+}
+
+.building-form-grid mat-form-field {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .building-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.building-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.building-entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.building-entry-table th {
+  background-color: #dff5fa;
+  color: #454545;
+  border: 1px solid #c5c8df;
+  padding: 14px 10px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.building-entry-table td {
+  border: 1px solid #c5c8df;
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.building-entry-table mat-form-field {
+  display: block;
+  width: 100%;
+  min-width: 140px;
+}
+
+.building-entry-table .building-actions {
+  white-space: nowrap;
+}
+
+.building-entry-table .building-actions button {
+  margin: 0 3px;
+  color: #344fc4;
+}
+
+@media (max-width: 768px) {
+  .building-entry-table {
+    min-width: 1100px;
+  }
+}
+

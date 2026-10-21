@@ -1,0 +1,56 @@
+package cdac.egov.qmssvr.config;
+
+
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import cdac.egov.qmssvr.entities.DropdownOption;
+import cdacc.egov.qmssvr.repository.DropdownOptionRepository;
+
+@Configuration
+public class DatabaseInitializer {
+
+    @Bean
+    ApplicationRunner initializeDatabase(
+            JdbcTemplate jdbc,
+            DropdownOptionRepository dropdownRepository) {
+
+        return args -> {
+            jdbc.execute(
+                "CREATE SEQUENCE IF NOT EXISTS work_id_seq START WITH 1");
+            jdbc.execute(
+                "CREATE SEQUENCE IF NOT EXISTS scope_id_seq START WITH 1");
+            jdbc.execute(
+                "CREATE SEQUENCE IF NOT EXISTS subwork_id_seq START WITH 1");
+
+            addOption(dropdownRepository, "MAINTENANCE_TYPE",
+                    "CR (Current Repair)");
+            addOption(dropdownRepository, "MAINTENANCE_TYPE",
+                    "SLR (Special Repair)");
+            addOption(dropdownRepository, "MAINTENANCE_TYPE",
+                    "SDR (Specified Repair)");
+
+            addOption(dropdownRepository, "BUILDING_ACTIVITY",
+                    "New Construction");
+            addOption(dropdownRepository, "BUILDING_ACTIVITY",
+                    "Other Activities From PMIS");
+        };
+    }
+
+    private void addOption(
+            DropdownOptionRepository repository,
+            String category,
+            String label) {
+
+        boolean exists = repository
+                .findByCategoryAndActiveTrueOrderById(category)
+                .stream()
+                .anyMatch(option -> option.getLabel().equals(label));
+
+        if (!exists) {
+            repository.save(new DropdownOption(category, label));
+        }
+    }
+}

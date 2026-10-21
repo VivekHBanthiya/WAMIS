@@ -1,0 +1,34 @@
+
+<h2 mat-dialog-title>Audit Details</h2>
+
+<mat-dialog-content>
+  <table class="building-entry-table">
+    <thead>
+      <tr>
+        <th>Remark</th>
+        <th>Name</th>
+        <th>Employee Name</th>
+        <th>Designation</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let audit of data.auditDetails">
+        <td>{{ audit.remark }}</td>
+        <td>{{ audit.name }}</td>
+        <td>{{ audit.employeeName }}</td>
+        <td>{{ audit.designation }}</td>
+        <td>{{ audit.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+      </tr>
+
+      <tr *ngIf="data.auditDetails.length === 0">
+        <td colspan="5">No audit history available.</td>
+      </tr>
+    </tbody>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

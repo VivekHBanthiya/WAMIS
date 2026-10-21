@@ -1,0 +1,45 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { AppRoutingModule } from './app-routing-module';
+import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { App } from './app';
+import { Building } from './scope/building/building';
+
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AuditDetails } from './scope/building/audit-details/audit-details';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+
+
+
+@NgModule({
+  declarations: [App, Building, AuditDetails],
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    MatDialogModule,
+  ],
+  providers: [provideBrowserGlobalErrorListeners(), provideAnimations(), provideHttpClient()],
+  bootstrap: [App],
+})
+export class AppModule {}
