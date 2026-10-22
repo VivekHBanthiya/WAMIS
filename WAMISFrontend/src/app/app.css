@@ -1,0 +1,20 @@
+.scope-navigation {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+.scope-navigation a {
+  padding: 8px 18px;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.scope-navigation a.active {
+  background: #dcecf5;
+  border-color: #6b9db8;
+  font-weight: 600;
+}

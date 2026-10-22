@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing-module';
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { App } from './app';
-import { Building } from './scope/building/building';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
@@ -18,13 +17,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+
 import { AuditDetails } from './scope/building/audit-details/audit-details';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-
-
+import { Building } from './scope/building/building';
+import { Others } from './scope/others/others';
 
 @NgModule({
-  declarations: [App, Building, AuditDetails],
+  declarations: [App, Building, AuditDetails, Others],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
