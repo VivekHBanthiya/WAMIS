@@ -1,34 +1,62 @@
+<div class="audit-dialog">
+  <h2>Audit Details</h2>
 
-<h2 mat-dialog-title>Audit Details</h2>
+  <div class="audit-table-container">
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Remark</th>
+          <th>Name</th>
+          <th>Employee Name</th>
+          <th>Designation</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
 
-<mat-dialog-content>
-  <table class="building-entry-table">
-    <thead>
-      <tr>
-        <th>Remark</th>
-        <th>Name</th>
-        <th>Employee Name</th>
-        <th>Designation</th>
-        <th>Timestamp</th>
-      </tr>
-    </thead>
+      <tbody>
+        <tr *ngFor="let audit of paginatedAuditDetails">
+          <td>{{ audit.remark }}</td>
+          <td>{{ audit.name }}</td>
+          <td>{{ audit.employeeName }}</td>
+          <td>{{ audit.designation }}</td>
+          <td>{{ audit.timestamp | date:'medium' }}</td>
+        </tr>
 
-    <tbody>
-      <tr *ngFor="let audit of data.auditDetails">
-        <td>{{ audit.remark }}</td>
-        <td>{{ audit.name }}</td>
-        <td>{{ audit.employeeName }}</td>
-        <td>{{ audit.designation }}</td>
-        <td>{{ audit.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-      </tr>
+        <tr *ngIf="totalElements === 0">
+          <td colspan="5" class="empty-state">No audit records found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <tr *ngIf="data.auditDetails.length === 0">
-        <td colspan="5">No audit history available.</td>
-      </tr>
-    </tbody>
-  </table>
-</mat-dialog-content>
+  <div class="audit-pagination">
+    <span>
+      {{ totalElements === 0 ? 0 : pageIndex * pageSize + 1 }}–
+      {{ totalElements === 0 ? 0 : Math.min((pageIndex + 1) * pageSize, totalElements) }}
+      of {{ totalElements }}
+    </span>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
-</mat-dialog-actions>
+    <label for="auditPageSize">Rows per page:</label>
+    <select
+      id="auditPageSize"
+      [value]="pageSize"
+      (change)="changePageSize($any($event.target).value)">
+      <option *ngFor="let size of pageSizeOptions" [value]="size">
+        {{ size }}
+      </option>
+    </select>
+
+    <button mat-button (click)="changePage(pageIndex - 1)" [disabled]="pageIndex === 0">
+      Previous
+    </button>
+    <span>Page {{ totalPages === 0 ? 0 : pageIndex + 1 }} of {{ totalPages }}</span>
+    <button mat-button (click)="changePage(pageIndex + 1)"
+      [disabled]="pageIndex >= totalPages - 1">
+      Next
+    </button>
+  </div>
+
+  <div class="audit-actions">
+    <button mat-button mat-dialog-close color="primary">Close</button>
+  </div>
+</div>
