@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
 		<list key="findhistory">
+			<item value="create"/>
+			<item value="nextId"/>
+			<item value="MultipartFile"/>
+			<item value="applyRequest"/>
+			<item value="@Value(&quot;${wamis.upload-dir:uploads}&quot;)"/>
 			<item value="envers"/>
 		</list>
 	</section>

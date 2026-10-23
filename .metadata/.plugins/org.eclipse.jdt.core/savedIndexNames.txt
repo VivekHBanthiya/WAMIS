@@ -21,7 +21,6 @@ INDEX VERSION 1.134+E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.jdt.cor
 1104942748.index
 1933866907.index
 2046730481.index
-3699990366.index
 1700429511.index
 1435537100.index
 2087462093.index
@@ -68,7 +67,6 @@ INDEX VERSION 1.134+E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.jdt.cor
 4059905476.index
 3168307513.index
 2152731109.index
-3136193493.index
 3335337237.index
 3528860583.index
 1953697380.index

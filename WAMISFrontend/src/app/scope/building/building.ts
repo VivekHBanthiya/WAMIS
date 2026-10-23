@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuditDetails } from './audit-details/audit-details';
@@ -12,6 +12,7 @@ export class Building implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly workContext = inject(WorkContext);
+  @ViewChild('draftDescription') private draftDescription?: ElementRef<HTMLInputElement>;
   maintenanceTypes: DropdownOption[] = [];
   buildingActivities: DropdownOption[] = [];
   records: BuildingRecord[] = [];
@@ -33,8 +34,8 @@ export class Building implements OnInit {
     return this.fb.group({
       buildingDescription: ['', [Validators.required, Validators.maxLength(1000)]],
       builtUpArea: [null, [Validators.required, Validators.min(0.01)]],
-      numberOfFloors: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\\d+$/)]],
-      numberOfBasements: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\\d+$/)]],
+      numberOfFloors: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
+      numberOfBasements: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
       maintenanceType: ['', Validators.required], buildingActivity: ['', Validators.required],
     });
   }
@@ -51,12 +52,27 @@ export class Building implements OnInit {
       next: result => {
         if (Array.isArray(result)) { this.records = result; this.totalElements = result.length; this.totalPages = result.length ? 1 : 0; }
         else { const p = result as PageResponse<BuildingRecord>; this.records = p.content ?? []; this.totalElements = p.totalElements ?? 0; this.totalPages = p.totalPages ?? 0; this.pageIndex = p.number ?? page; }
+        if (this.totalElements === 0 && this.editingId === null) this.adding = true;
+        else if (this.pageIndex === 0 && this.editingId === null) this.adding = false;
         this.loading = false; this.cdr.markForCheck();
       }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to load buildings.'; this.loading = false; this.cdr.markForCheck(); }
     });
   }
-  startAdd(): void { if (this.adding || this.editingId !== null) return; this.adding = true; this.form.reset(); this.errorMessage = ''; }
-  cancelAdd(): void { this.adding = false; this.form.reset(); }
+  startAdd(): void {
+    if (this.editingId !== null) return;
+    if (!this.adding) { this.adding = true; this.form.reset(); this.errorMessage = ''; }
+    setTimeout(() => this.draftDescription?.nativeElement.focus());
+  }
+  cancelAdd(): void {
+    const hasInput = Object.values(this.form.getRawValue()).some(value => value !== null && String(value).trim() !== '');
+    if (hasInput) {
+      this.errorMessage = 'This row has unsaved data. Save it before closing.';
+      return;
+    }
+    this.adding = false;
+    this.form.reset();
+    this.errorMessage = '';
+  }
   edit(row: BuildingRecord): void { if (this.saving) return; this.adding = false; this.editingId = row.id; this.form.patchValue(row); this.errorMessage = ''; }
   cancelEdit(): void { this.editingId = null; this.form.reset(); this.errorMessage = ''; }
   save(): void {
@@ -70,7 +86,7 @@ export class Building implements OnInit {
       if (editingId === null) { this.workContext.workId = saved.workId ?? this.workContext.workId; this.records = [saved, ...this.records].slice(0, this.pageSize); this.totalElements++; this.adding = true; this.editingId = null; this.form.reset(); }
       else { this.records = this.records.map(r => r.id === saved.id ? saved : r); this.editingId = null; this.form.reset(); }
       this.saving = false; this.cdr.markForCheck();
-    }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to save the building.'; this.saving = false; this.cdr.markForCheck(); } });
+    }, error: e => { this.errorMessage = e?.status === 0 ? 'Cannot reach the backend. Start the backend and PostgreSQL, then try again.' : e?.error?.message ?? e?.message ?? 'Unable to save the building.'; this.saving = false; this.cdr.markForCheck(); } });
   }
   delete(row: BuildingRecord): void {
     if (this.saving || !confirm(`Delete "${row.buildingDescription}"?`)) return;

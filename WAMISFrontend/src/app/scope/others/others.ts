@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OthersRecord, OthersService, UnitOption } from '../../services/others';
@@ -12,9 +12,11 @@ export class Others implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly workContext = inject(WorkContext);
+  @ViewChild('draftDescription') private draftDescription?: ElementRef<HTMLInputElement>;
   units: UnitOption[] = [];
   records: OthersRecord[] = [];
   loading = false;
+  loadingUnits = false;
   saving = false;
   errorMessage = '';
   editingId: number | null = null;
@@ -27,13 +29,22 @@ export class Others implements OnInit {
   readonly form: FormGroup = this.createForm();
   ngOnInit(): void { this.loadUnits(); this.loadRecords(); }
   private createForm(): FormGroup { return this.fb.group({ description: ['', [Validators.required, Validators.maxLength(1000)]], unitId: [null, Validators.required], quantity: [null, [Validators.required, Validators.min(0)]] }); }
-  loadUnits(): void { this.service.getUnits().subscribe({ next: u => { this.units = u; this.cdr.markForCheck(); }, error: () => this.errorMessage = 'Unable to load units.' }); }
+  loadUnits(): void { this.loadingUnits = true; this.service.getUnits().subscribe({ next: u => { this.units = u; this.loadingUnits = false; this.cdr.markForCheck(); }, error: () => { this.errorMessage = 'Unable to load units. Please check the backend connection.'; this.loadingUnits = false; this.cdr.markForCheck(); } }); }
   loadRecords(page = this.pageIndex): void {
     this.loading = true;
-    this.service.getOthers(page, this.pageSize).subscribe({ next: p => { this.records = p.content ?? []; this.totalElements = p.totalElements ?? 0; this.totalPages = p.totalPages ?? 0; this.pageIndex = p.number ?? page; this.pageSize = p.size ?? this.pageSize; this.loading = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to load Others records.'; this.loading = false; this.cdr.markForCheck(); } });
+    this.service.getOthers(page, this.pageSize).subscribe({ next: p => { this.records = p.content ?? []; this.totalElements = p.totalElements ?? 0; this.totalPages = p.totalPages ?? 0; this.pageIndex = p.number ?? page; this.pageSize = p.size ?? this.pageSize; if (this.totalElements > 0 && this.pageIndex === 0 && this.adding) this.adding = false; else if (this.totalElements === 0 && this.editingId === null) this.adding = true; this.loading = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to load Others records.'; this.loading = false; this.cdr.markForCheck(); } });
   }
-  startAdd(): void { if (this.adding || this.editingId !== null) return; this.adding = true; this.form.reset(); this.errorMessage = ''; }
-  cancelAdd(): void { this.adding = false; this.form.reset(); }
+  startAdd(): void { if (this.editingId !== null) return; if (!this.adding) { this.adding = true; this.form.reset(); this.errorMessage = ''; } setTimeout(() => this.draftDescription?.nativeElement.focus()); }
+  cancelAdd(): void {
+    const hasInput = Object.values(this.form.getRawValue()).some(value => value !== null && String(value).trim() !== '');
+    if (hasInput) {
+      this.errorMessage = 'This row has unsaved data. Save it before closing.';
+      return;
+    }
+    this.adding = false;
+    this.form.reset();
+    this.errorMessage = '';
+  }
   edit(row: OthersRecord): void { if (this.saving) return; this.adding = false; this.editingId = row.id; this.form.setValue({ description: row.description, unitId: row.unit.id, quantity: row.quantity }); this.errorMessage = ''; }
   cancelEdit(): void { this.editingId = null; this.form.reset(); }
   save(): void {
@@ -42,7 +53,7 @@ export class Others implements OnInit {
     const request = { description: String(v.description).trim(), unitId: Number(v.unitId), quantity: Number(v.quantity), ...(id === null && this.workContext.workId !== null ? { workId: this.workContext.workId } : {}) };
     this.saving = true; this.errorMessage = '';
     const op = id === null ? this.service.createOther(request) : this.service.updateOther(id, request);
-    op.subscribe({ next: row => { if (id === null) { this.workContext.workId = row.workId ?? this.workContext.workId; this.records = [row, ...this.records].slice(0, this.pageSize); this.totalElements++; this.adding = true; } else { this.records = this.records.map(r => r.id === row.id ? row : r); this.editingId = null; } this.form.reset(); this.saving = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to save record.'; this.saving = false; this.cdr.markForCheck(); } });
+    op.subscribe({ next: row => { if (id === null) { this.workContext.workId = row.workId ?? this.workContext.workId; this.records = [row, ...this.records].slice(0, this.pageSize); this.totalElements++; this.adding = true; } else { this.records = this.records.map(r => r.id === row.id ? row : r); this.editingId = null; } this.form.reset(); this.saving = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.status === 0 ? 'Cannot reach the backend. Start the backend and PostgreSQL, then try again.' : e?.error?.message ?? e?.message ?? 'Unable to save record.'; this.saving = false; this.cdr.markForCheck(); } });
   }
   delete(row: OthersRecord): void { if (this.saving || !confirm(`Delete "${row.description}"?`)) return; this.errorMessage = ''; this.service.deleteOther(row.id).subscribe({ next: () => { this.records = this.records.filter(r => r.id !== row.id); this.totalElements = Math.max(0, this.totalElements - 1); if (!this.records.length && this.pageIndex > 0) this.pageIndex--; this.loadRecords(this.pageIndex); }, error: e => this.errorMessage = e?.error?.message ?? 'Unable to delete record.' }); }
   viewAudit(row: OthersRecord): void { this.service.getAuditHistory(row.id).subscribe({ next: auditDetails => this.dialog.open(AuditDetails, { width: '900px', maxWidth: '95vw', maxHeight: '85vh', autoFocus: false, panelClass: 'audit-details-dialog', data: { building: row, auditDetails } }), error: e => this.errorMessage = e?.error?.message ?? 'Unable to load audit details.' }); }

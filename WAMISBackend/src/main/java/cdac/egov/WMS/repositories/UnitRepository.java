@@ -8,4 +8,6 @@ import cdac.egov.WMS.entities.Unit;
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 
     List<Unit> findByActiveTrueOrderByShortNameAsc();
+
+    java.util.Optional<Unit> findByShortName(String shortName);
 }
