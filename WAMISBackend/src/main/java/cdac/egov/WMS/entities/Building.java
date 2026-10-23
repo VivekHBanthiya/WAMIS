@@ -1,18 +1,12 @@
-package cdac.egov.WMS.entities;
 
+package cdac.egov.WMS.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.envers.Audited;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,14 +21,9 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @NotNull
+    @Column(name = "work_id", nullable = false, updatable = false)
     private Long workId;
-
-    @Column(nullable = false, unique = true, updatable = false)
-    private Long scopeId;
-
-    @Column(nullable = false, unique = true, updatable = false)
-    private Long subworkId;
 
     @NotBlank
     @Size(max = 1000)
@@ -62,17 +51,13 @@ public class Building {
     @Column(nullable = false)
     private String buildingActivity;
 
-    private String attachmentName;
-
-    private String attachmentPath;
-
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     public Building() {}
@@ -90,30 +75,34 @@ public class Building {
 
     public Long getId() { return id; }
     public Long getWorkId() { return workId; }
-    public Long getScopeId() { return scopeId; }
-    public Long getSubworkId() { return subworkId; }
     public String getBuildingDescription() { return buildingDescription; }
     public BigDecimal getBuiltUpArea() { return builtUpArea; }
     public Integer getNumberOfFloors() { return numberOfFloors; }
     public Integer getNumberOfBasements() { return numberOfBasements; }
     public String getMaintenanceType() { return maintenanceType; }
     public String getBuildingActivity() { return buildingActivity; }
-    public String getAttachmentName() { return attachmentName; }
-    public String getAttachmentPath() { return attachmentPath; }
     public boolean isDeleted() { return deleted; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public void setWorkId(Long value) { workId = value; }
-    public void setScopeId(Long value) { scopeId = value; }
-    public void setSubworkId(Long value) { subworkId = value; }
-    public void setBuildingDescription(String value) { buildingDescription = value; }
-    public void setBuiltUpArea(BigDecimal value) { builtUpArea = value; }
-    public void setNumberOfFloors(Integer value) { numberOfFloors = value; }
-    public void setNumberOfBasements(Integer value) { numberOfBasements = value; }
-    public void setMaintenanceType(String value) { maintenanceType = value; }
-    public void setBuildingActivity(String value) { buildingActivity = value; }
-    public void setAttachmentName(String value) { attachmentName = value; }
-    public void setAttachmentPath(String value) { attachmentPath = value; }
-    public void setDeleted(boolean value) { deleted = value; }
+    public void setWorkId(Long workId) { this.workId = workId; }
+    public void setBuildingDescription(String value) {
+        this.buildingDescription = value;
+    }
+    public void setBuiltUpArea(BigDecimal value) {
+        this.builtUpArea = value;
+    }
+    public void setNumberOfFloors(Integer value) {
+        this.numberOfFloors = value;
+    }
+    public void setNumberOfBasements(Integer value) {
+        this.numberOfBasements = value;
+    }
+    public void setMaintenanceType(String value) {
+        this.maintenanceType = value;
+    }
+    public void setBuildingActivity(String value) {
+        this.buildingActivity = value;
+    }
+    public void setDeleted(boolean value) { this.deleted = value; }
 }

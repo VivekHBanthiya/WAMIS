@@ -1,0 +1,5 @@
+package cdac.egov.WMS.controllers;
+
+public class ScopeController {
+
+}

@@ -1,16 +1,14 @@
 package cdac.egov.WMS.services;
 
-import java.io.IOException;
-import java.nio.file.*;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import cdac.egov.WMS.dto.BuildingRequest;
 import cdac.egov.WMS.entities.Building;
@@ -20,10 +18,6 @@ import cdac.egov.WMS.repositories.BuildingAuditRepository;
 import cdac.egov.WMS.repositories.BuildingRepository;
 import cdac.egov.WMS.repositories.DropdownOptionRepository;
 
-import java.math.BigDecimal;
-import jakarta.persistence.criteria.Predicate;
-import java.util.ArrayList;
-
 @Service
 public class BuildingService {
 
@@ -32,14 +26,12 @@ public class BuildingService {
     private final DropdownOptionRepository options;
     private final JdbcTemplate jdbc;
 
-    @Value("${wamis.upload-dir:uploads}")
-    private String uploadDir;
-
     public BuildingService(
             BuildingRepository buildings,
             BuildingAuditRepository audits,
             DropdownOptionRepository options,
             JdbcTemplate jdbc) {
+
         this.buildings = buildings;
         this.audits = audits;
         this.options = options;
@@ -64,19 +56,16 @@ public class BuildingService {
     }
 
     @Transactional
-    public Building create(BuildingRequest request, MultipartFile file)
-            throws IOException {
+    public Building create(BuildingRequest request) {
 
         validateOptions(request);
 
         Building building = new Building();
         applyRequest(building, request);
+        building.setWorkId(request.workId() == null
+                ? jdbc.queryForObject("SELECT nextval('work_id_seq')", Long.class)
+                : request.workId());
 
-        building.setWorkId(nextId("work_id_seq"));
-        building.setScopeId(nextId("scope_id_seq"));
-        building.setSubworkId(nextId("subwork_id_seq"));
-
-        saveAttachment(building, file);
         Building saved = buildings.saveAndFlush(building);
 
         audit(saved, "Created", "Initial building record created");
@@ -85,16 +74,13 @@ public class BuildingService {
 
     @Transactional
     public Building update(
-            Long id, BuildingRequest request, MultipartFile file)
-            throws IOException {
+            Long id, BuildingRequest request) {
 
         Building building = get(id);
         validateOptions(request);
 
         String before = snapshot(building);
         applyRequest(building, request);
-        saveAttachment(building, file);
-
         Building saved = buildings.saveAndFlush(building);
         audit(saved, "Updated",
                 "Before: " + before + " | After: " + snapshot(saved));
@@ -121,10 +107,6 @@ public class BuildingService {
         return options.findByCategoryAndActiveTrueOrderById(category);
     }
 
-    private Long nextId(String sequence) {
-        return jdbc.queryForObject(
-                "SELECT nextval('" + sequence + "')", Long.class);
-    }
 
     private void validateOptions(BuildingRequest request) {
         boolean maintenanceValid = options
@@ -152,42 +134,6 @@ public class BuildingService {
         b.setBuildingActivity(r.buildingActivity());
     }
 
-    private void saveAttachment(Building b, MultipartFile file)
-            throws IOException {
-
-        if (file == null || file.isEmpty()) {
-            return;
-        }
-
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new IllegalArgumentException(
-                    "Attachment must not exceed 10 MB");
-        }
-
-        String original = Path.of(file.getOriginalFilename() == null
-                ? "attachment" : file.getOriginalFilename())
-                .getFileName().toString();
-
-        String extension = original.contains(".")
-                ? original.substring(original.lastIndexOf('.')) : "";
-
-        String storedName = java.util.UUID.randomUUID() + extension;
-
-        Path directory = Paths.get(uploadDir).toAbsolutePath().normalize();
-        Files.createDirectories(directory);
-        Path destination = directory.resolve(storedName).normalize();
-
-        if (!destination.startsWith(directory)) {
-            throw new IllegalArgumentException("Invalid attachment path");
-        }
-
-        Files.copy(file.getInputStream(), destination,
-                StandardCopyOption.REPLACE_EXISTING);
-
-        b.setAttachmentName(original);
-        b.setAttachmentPath(destination.toString());
-    }
-
     private String snapshot(Building b) {
         return "description=" + b.getBuildingDescription()
                 + ", area=" + b.getBuiltUpArea()
@@ -206,84 +152,6 @@ public class BuildingService {
                 "System",
                 details));
     }
-    
-    public Page<Building> search(
-            int page,
-            int size,
-            String description,
-            String maintenanceType,
-            String buildingActivity,
-            String areaOperator,
-            BigDecimal areaValue,
-            String floorsOperator,
-            Integer floorsValue,
-            String basementsOperator,
-            Integer basementsValue) {
 
-        Pageable pageable = PageRequest.of(
-                Math.max(page, 0),
-                Math.min(Math.max(size, 1), 100),
-                Sort.by("id").descending());
-
-        return buildings.findAll((root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            predicates.add(cb.isFalse(root.get("deleted")));
-
-            if (description != null && !description.isBlank()) {
-                predicates.add(cb.like(
-                        cb.lower(root.get("buildingDescription")),
-                        "%" + description.trim().toLowerCase() + "%"));
-            }
-
-            if (maintenanceType != null && !maintenanceType.isBlank()) {
-                predicates.add(cb.equal(
-                        root.get("maintenanceType"), maintenanceType));
-            }
-
-            if (buildingActivity != null && !buildingActivity.isBlank()) {
-                predicates.add(cb.equal(
-                        root.get("buildingActivity"), buildingActivity));
-            }
-            
-            addComparison(predicates, root, cb,
-                    "builtUpArea", areaOperator, areaValue);
-
-            addComparison(predicates, root, cb,
-                    "numberOfFloors", floorsOperator, floorsValue);
-
-            addComparison(predicates, root, cb,
-                    "numberOfBasements", basementsOperator, basementsValue);
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        }, pageable);
-    }
-
-    private <T extends Comparable<? super T>> void addComparison(
-            List<Predicate> predicates,
-            jakarta.persistence.criteria.Root<Building> root,
-            jakarta.persistence.criteria.CriteriaBuilder cb,
-            String field,
-            String operator,
-            T value) {
-
-        if (value == null) {
-            return;
-        }
-
-        if (operator == null || operator.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Select a comparison operator for " + field);
-        }
-
-        switch (operator) {
-            case "=" -> predicates.add(cb.equal(root.get(field), value));
-            case "<" -> predicates.add(cb.lessThan(root.get(field), value));
-            case ">" -> predicates.add(cb.greaterThan(root.get(field), value));
-            case "<=" -> predicates.add(cb.lessThanOrEqualTo(root.get(field), value));
-            case ">=" -> predicates.add(cb.greaterThanOrEqualTo(root.get(field), value));
-            default -> throw new IllegalArgumentException(
-                    "Invalid comparison operator: " + operator);
-        }
-    }
 }
+

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import cdac.egov.WMS.dto.OthersRequest;
 import cdac.egov.WMS.entities.Others;
@@ -17,6 +18,7 @@ import cdac.egov.WMS.repositories.OthersAuditRepository;
 import cdac.egov.WMS.repositories.OthersRepository;
 import cdac.egov.WMS.repositories.UnitRepository;
 
+
 @Service
 @Transactional
 public class OthersService {
@@ -24,14 +26,18 @@ public class OthersService {
     private final OthersRepository othersRepository;
     private final UnitRepository unitRepository;
     private final OthersAuditRepository auditRepository;
+    private final JdbcTemplate jdbc;
 
     public OthersService(
             OthersRepository othersRepository,
             UnitRepository unitRepository,
-            OthersAuditRepository auditRepository) {
+            OthersAuditRepository auditRepository,
+            JdbcTemplate jdbc) {
+
         this.othersRepository = othersRepository;
         this.unitRepository = unitRepository;
         this.auditRepository = auditRepository;
+        this.jdbc = jdbc;
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +66,9 @@ public class OthersService {
     public Others create(OthersRequest request) {
         Others others = new Others();
         applyRequest(others, request);
+        others.setWorkId(request.getWorkId() == null
+                ? jdbc.queryForObject("SELECT nextval('work_id_seq')", Long.class)
+                : request.getWorkId());
 
         Others saved = othersRepository.saveAndFlush(others);
         audit(saved, "Created", "Others record created");
@@ -119,8 +128,7 @@ public class OthersService {
     private void applyRequest(Others others, OthersRequest request) {
         if (request.getDescription() == null
                 || request.getDescription().isBlank()) {
-            throw new IllegalArgumentException(
-                    "Description is required.");
+            throw new IllegalArgumentException("Description is required.");
         }
 
         others.setDescription(request.getDescription().trim());
@@ -128,9 +136,10 @@ public class OthersService {
 
         Unit unit = unitRepository.findById(request.getUnitId())
                 .filter(Unit::isActive)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Unit not found or inactive: "
-                                + request.getUnitId()));
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Unit not found or inactive: "
+                                        + request.getUnitId()));
 
         others.setUnit(unit);
     }

@@ -36,6 +36,9 @@ public class Others {
     @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal quantity;
 
+    @Column(name = "work_id")
+    private Long workId;
+
     @Column(nullable = false)
     private boolean deleted = false;
 
@@ -65,6 +68,9 @@ public class Others {
     public boolean isDeleted() { return deleted; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Long getWorkId() { return workId; }
+
+    public void setWorkId(Long workId) { this.workId = workId; }
 
     public void setDescription(String description) {
         this.description = description;

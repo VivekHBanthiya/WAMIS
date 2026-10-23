@@ -1,17 +1,9 @@
 package cdac.egov.WMS.controllers;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,29 +42,6 @@ public class BuildingController {
             @RequestParam(defaultValue = "5") int size) {
         return service.list(page, size);
     }
-    
-    @GetMapping("/search")
-    public Page<Building> search(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String buildingDescription,
-            @RequestParam(required = false) String maintenanceType,
-            @RequestParam(required = false) String buildingActivity,
-            @RequestParam(required = false) String areaOperator,
-            @RequestParam(required = false) BigDecimal areaValue,
-            @RequestParam(required = false) String floorsOperator,
-            @RequestParam(required = false) Integer floorsValue,
-            @RequestParam(required = false) String basementsOperator,
-            @RequestParam(required = false) Integer basementsValue) {
-
-        return service.search(
-                page, size,
-                buildingDescription, maintenanceType, buildingActivity,
-                areaOperator, areaValue,
-                floorsOperator, floorsValue,
-                basementsOperator, basementsValue);
-    }
-    
 
     @GetMapping("/{id}")
     public Building get(@PathVariable Long id) {
@@ -80,19 +49,18 @@ public class BuildingController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Building create(
-            @Valid @RequestBody BuildingRequest request) throws IOException {
-        return service.create(request, null);
+    public Building create(@Valid @RequestBody BuildingRequest request) {
+        return service.create(request);
     }
 
     @PutMapping(
     	    value = "/{id}",
     	    consumes = MediaType.APPLICATION_JSON_VALUE
     	)
-    	public Building update(
-    	        @PathVariable Long id,
-    	        @Valid @RequestBody BuildingRequest request) throws IOException {
-    	    return service.update(id, request, null);
+	public Building update(
+	        @PathVariable Long id,
+	        @Valid @RequestBody BuildingRequest request) {
+	    return service.update(id, request);
     	}
 
     @DeleteMapping("/{id}")
@@ -111,35 +79,6 @@ public class BuildingController {
         return service.dropdown(category);
     }
 
-    @GetMapping("/{id}/attachment")
-    public ResponseEntity<Resource> attachment(@PathVariable Long id)
-            throws IOException {
-
-        Building building = service.get(id);
-
-        if (building.getAttachmentPath() == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Path path = Path.of(building.getAttachmentPath()).normalize();
-
-        if (!Files.exists(path) || !Files.isRegularFile(path)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Resource resource = new UrlResource(path.toUri());
-
-        String filename = building.getAttachmentName() == null
-                ? "attachment" : building.getAttachmentName();
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.attachment()
-                                .filename(filename)
-                                .build().toString())
-                .body(resource);
-    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleBadRequest(

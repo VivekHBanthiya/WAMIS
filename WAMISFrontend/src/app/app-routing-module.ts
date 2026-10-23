@@ -5,10 +5,10 @@ import { Building } from './scope/building/building';
 import { Others } from './scope/others/others';
 
 const routes: Routes = [
-  { path: 'scope/building', component: Building },
-  { path: 'scope/others', component: Others },
-  { path: '', redirectTo: 'scope/building', pathMatch: 'full' },
-  { path: '**', redirectTo: 'scope/building' }
+  { path: 'building', component: Building },
+  { path: 'others', component: Others },
+  { path: '', redirectTo: 'building', pathMatch: 'full' },
+  { path: '**', redirectTo: 'building' }
 ];
 
 @NgModule({

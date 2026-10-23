@@ -9,38 +9,48 @@ import jakarta.validation.constraints.Size;
 
 public class OthersRequest {
 
-    @NotBlank
-    @Size(max = 1000)
-    private String description;
+	@NotBlank
+	@Size(max = 1000)
+	private String description;
 
-    @NotNull
-    private Long unitId;
+	@NotNull
+	private Long unitId;
 
-    @NotNull
-    @DecimalMin("0.0")
-    private BigDecimal quantity;
+	@NotNull
+	@DecimalMin("0.0")
+	private BigDecimal quantity;
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public Long getUnitId() {
-        return unitId;
-    }
+	public Long getUnitId() {
+		return unitId;
+	}
 
-    public void setUnitId(Long unitId) {
-        this.unitId = unitId;
-    }
+	public void setUnitId(Long unitId) {
+		this.unitId = unitId;
+	}
 
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
+	public BigDecimal getQuantity() {
+		return quantity;
+	}
 
-    public void setQuantity(BigDecimal quantity) {
-        this.quantity = quantity;
-    }
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
+	}
+
+	private Long workId;
+
+	public Long getWorkId() {
+		return workId;
+	}
+
+	public void setWorkId(Long workId) {
+		this.workId = workId;
+	}
 }

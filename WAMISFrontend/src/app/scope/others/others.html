@@ -1,178 +1,22 @@
-
-<div class="others-container">
-  <h2>Others</h2>
-
-  <section class="building-section">
-    <h3 class="section-title">Add Others Details</h3>
-
-    <form [formGroup]="addRowsForm" (ngSubmit)="$event.preventDefault()">
-      <div class="building-table-wrapper">
-        <table class="building-entry-table">
-          <thead>
-            <tr>
-              <th>Sr. No.</th>
-              <th>Description <span class="required">*</span></th>
-              <th>Unit <span class="required">*</span></th>
-              <th>Quantity <span class="required">*</span></th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody formArrayName="otherRows">
-            <tr *ngFor="let row of otherRows.controls; let i = index"
-                [formGroupName]="i">
-              <td>{{ i + 1 }}</td>
-
-              <td>
-                <mat-form-field appearance="outline">
-                  <input matInput formControlName="description"
-                         placeholder="Enter description">
-                  <mat-error>Description is required.</mat-error>
-                </mat-form-field>
-              </td>
-
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-select formControlName="unitId" placeholder="Select unit">
-                    <mat-option *ngFor="let unit of units" [value]="unit.id">
-                      {{ unit.shortName }} - {{ unit.description }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error>Unit is required.</mat-error>
-                </mat-form-field>
-              </td>
-
-              <td>
-                <mat-form-field appearance="outline">
-                  <input matInput type="number" min="0" step="0.01"
-                         formControlName="quantity" placeholder="Enter quantity">
-                  <mat-error>Enter a valid quantity.</mat-error>
-                </mat-form-field>
-              </td>
-
-              <td class="building-actions">
-                <button mat-icon-button type="button" class="save-icon"
-                        [disabled]="saving"
-                        (click)="saveRow(i)" title="Save row">
-                  <mat-icon>save</mat-icon>
-                </button>
-
-                <button mat-icon-button type="button"
-                        (click)="addRow()" title="Add another row">
-                  <mat-icon>add</mat-icon>
-                </button>
-
-                <button mat-icon-button type="button" class="delete-icon"
-                        (click)="removeRow(i)" title="Remove row">
-                  <mat-icon>delete</mat-icon>
-                </button>
-
-                <button *ngIf="editingId !== null && i === 0"
-                        mat-icon-button type="button"
-                        (click)="cancelEdit()" title="Cancel edit">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </form>
-
-    <p *ngIf="successMessage" class="inline-status">
-      {{ successMessage }}
-    </p>
-    <p *ngIf="errorMessage" class="inline-error">
-      {{ errorMessage }}
-    </p>
-  </section>
-
-  <section class="building-section view-building-section">
-    <h3 class="section-title">Others Records</h3>
-
-    <div class="building-table-wrapper results-wrapper">
-      <table class="building-entry-table results-table">
-        <thead>
-          <tr>
-            <th>Sr. No.</th>
-            <th>Description</th>
-            <th>Unit</th>
-            <th>Quantity</th>
-            <th>Audit</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let record of records; let i = index">
-            <td>{{ pageIndex * pageSize + i + 1 }}</td>
-            <td>{{ record.description }}</td>
-            <td>{{ record.unit.shortName }} - {{ record.unit.description }}</td>
-            <td>{{ record.quantity }}</td>
-
-            <td class="building-actions">
-              <button mat-icon-button type="button"
-                      (click)="viewAudit(record)"
-                      title="Audit details" aria-label="Audit details">
-                <mat-icon>check</mat-icon>
-              </button>
-            </td>
-
-            <td class="building-actions">
-              <button mat-icon-button type="button"
-                      (click)="edit(record)" title="Edit">
-                <mat-icon>edit</mat-icon>
-              </button>
-
-              <button mat-icon-button type="button" class="delete-icon"
-                      (click)="delete(record)" title="Delete">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </tr>
-
-          <tr *ngIf="loading">
-            <td colspan="6" class="table-message">Loading records...</td>
-          </tr>
-
-          <tr *ngIf="!loading && records.length === 0">
-            <td colspan="6" class="table-message">No records found.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="table-footer">
-      <div class="pagination-controls">
-        <label class="page-size-label">
-          Rows per page
-          <select [value]="pageSize"
-                  (change)="changePageSize($any($event.target).value)">
-            <option *ngFor="let size of pageSizeOptions" [value]="size">
-              {{ size }}
-            </option>
-          </select>
-        </label>
-
-        <span class="page-summary">
-          {{ totalElements ? pageIndex * pageSize + 1 : 0 }}–{{
-            totalElements ? pageIndex * pageSize + records.length : 0
-          }} of {{ totalElements }}
-        </span>
-
-        <button mat-icon-button type="button"
-                (click)="changePage(pageIndex - 1)"
-                [disabled]="pageIndex === 0 || loading" title="Previous page">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-
-        <button mat-icon-button type="button"
-                (click)="changePage(pageIndex + 1)"
-                [disabled]="pageIndex + 1 >= totalPages || loading"
-                title="Next page">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
-    </div>
-  </section>
-</div>
+<section class="building-section others-container">
+  <h2 class="section-title">Others</h2>
+  <p *ngIf="errorMessage" class="inline-error" role="alert">{{ errorMessage }}</p>
+  <div class="building-table-wrapper"><table class="building-entry-table results-table">
+    <thead><tr><th>S.No.</th><th>Description</th><th>Unit</th><th>Quantity</th><th>Audit Details</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngIf="loading"><td colspan="6" class="table-message">Loading records…</td></tr>
+      <tr *ngFor="let row of records; let i = index">
+        <td>{{ serialOffset + i + 1 }}</td>
+        <td><ng-container *ngIf="editingId === row.id; else description"><div [formGroup]="form"><mat-form-field appearance="outline"><input matInput formControlName="description"><mat-error>Description is required.</mat-error></mat-form-field></div></ng-container><ng-template #description>{{ row.description }}</ng-template></td>
+        <td><ng-container *ngIf="editingId === row.id; else unitText"><div [formGroup]="form"><mat-form-field appearance="outline"><mat-select formControlName="unitId"><mat-option *ngFor="let unit of units" [value]="unit.id">{{ unit.shortName }} - {{ unit.description }}</mat-option></mat-select></mat-form-field></div></ng-container><ng-template #unitText>{{ row.unit.shortName }} - {{ row.unit.description }}</ng-template></td>
+        <td><ng-container *ngIf="editingId === row.id; else quantityText"><div [formGroup]="form"><mat-form-field appearance="outline"><input matInput type="number" min="0" step="0.01" formControlName="quantity"></mat-form-field></div></ng-container><ng-template #quantityText>{{ row.quantity }}</ng-template></td>
+        <td class="building-actions"><button mat-icon-button type="button" (click)="viewAudit(row)" aria-label="Audit details"><mat-icon>history</mat-icon></button></td>
+        <td class="building-actions"><ng-container *ngIf="editingId !== row.id; else editActions"><button mat-icon-button type="button" (click)="edit(row)" [disabled]="saving" aria-label="Edit"><mat-icon>edit</mat-icon></button><button mat-icon-button type="button" class="delete-icon" (click)="delete(row)" [disabled]="saving" aria-label="Delete"><mat-icon>delete</mat-icon></button></ng-container><ng-template #editActions><button mat-icon-button type="button" class="save-icon" (click)="save()" [disabled]="saving" aria-label="Save"><mat-icon>save</mat-icon></button><button mat-icon-button type="button" (click)="cancelEdit()" [disabled]="saving" aria-label="Cancel"><mat-icon>close</mat-icon></button></ng-template></td>
+      </tr>
+      <tr *ngIf="!loading && records.length === 0 && !adding"><td colspan="6" class="table-message">No records found. Select + to add the first record.</td></tr>
+      <tr *ngIf="adding" [formGroup]="form"><td>{{ totalElements + 1 }}</td><td><mat-form-field appearance="outline"><input matInput formControlName="description" placeholder="Description"><mat-error>Description is required.</mat-error></mat-form-field></td><td><mat-form-field appearance="outline"><mat-select formControlName="unitId" placeholder="Select unit"><mat-option *ngFor="let unit of units" [value]="unit.id">{{ unit.shortName }} - {{ unit.description }}</mat-option></mat-select><mat-error>Unit is required.</mat-error></mat-form-field></td><td><mat-form-field appearance="outline"><input matInput type="number" min="0" step="0.01" formControlName="quantity" placeholder="Quantity"><mat-error>Enter a valid quantity.</mat-error></mat-form-field></td><td></td><td class="building-actions"><button mat-icon-button type="button" class="save-icon" (click)="save()" [disabled]="saving" aria-label="Save"><mat-icon>save</mat-icon></button><button mat-icon-button type="button" (click)="cancelAdd()" [disabled]="saving" aria-label="Cancel"><mat-icon>close</mat-icon></button></td></tr>
+      <tr *ngIf="!adding && editingId === null"><td colspan="6" class="table-message"><button mat-icon-button type="button" color="primary" (click)="startAdd()" aria-label="Add record" title="Add record"><mat-icon>add</mat-icon></button></td></tr>
+    </tbody>
+  </table></div>
+  <div class="table-footer" *ngIf="totalPages > 1"><div class="pagination-controls"><label class="page-size-label">Rows per page <select [value]="pageSize" (change)="changePageSize($any($event.target).value)"><option *ngFor="let n of pageSizeOptions" [value]="n">{{ n }}</option></select></label><span class="page-summary">{{ serialOffset + 1 }}–{{ serialOffset + records.length }} of {{ totalElements }}</span><button mat-icon-button (click)="changePage(pageIndex - 1)" [disabled]="pageIndex === 0"><mat-icon>chevron_left</mat-icon></button><button mat-icon-button (click)="changePage(pageIndex + 1)" [disabled]="pageIndex + 1 >= totalPages"><mat-icon>chevron_right</mat-icon></button></div></div>
+</section>

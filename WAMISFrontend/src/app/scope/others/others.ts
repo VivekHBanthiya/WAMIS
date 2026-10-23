@@ -1,243 +1,52 @@
-
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { OthersService, OthersRecord, UnitOption } from '../../services/others';
+import { OthersRecord, OthersService, UnitOption } from '../../services/others';
 import { AuditDetails } from '../building/audit-details/audit-details';
+import { WorkContext } from '../../services/work-context';
 
-@Component({
-  selector: 'app-others',
-  standalone: false,
-  templateUrl: './others.html'
-})
+@Component({ selector: 'app-others', standalone: false, templateUrl: './others.html' })
 export class Others implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(OthersService);
   private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
-
+  private readonly workContext = inject(WorkContext);
   units: UnitOption[] = [];
   records: OthersRecord[] = [];
-
   loading = false;
   saving = false;
   errorMessage = '';
-  successMessage = '';
   editingId: number | null = null;
-
+  adding = false;
   pageIndex = 0;
-  pageSize = 5;
+  pageSize = 10;
   totalElements = 0;
   totalPages = 0;
   readonly pageSizeOptions = [5, 10, 20, 50];
-
-  readonly otherRows = this.fb.array<FormGroup>([]);
-  readonly addRowsForm = this.fb.group({ otherRows: this.otherRows });
-
-  ngOnInit(): void {
-    this.addRow();
-    this.loadUnits();
-    this.loadRecords();
-  }
-
-  private createRow(): FormGroup {
-    return this.fb.group({
-      description: ['', [Validators.required, Validators.maxLength(1000)]],
-      unitId: [null as number | null, Validators.required],
-      quantity: [null as number | null, [Validators.required, Validators.min(0)]]
-    });
-  }
-
-  addRow(): void {
-    this.otherRows.push(this.createRow());
-  }
-
-  removeRow(index: number): void {
-    if (this.otherRows.length === 1) {
-      this.otherRows.at(0).reset({
-        description: '',
-        unitId: null,
-        quantity: null
-      });
-      return;
-    }
-
-    this.otherRows.removeAt(index);
-  }
-
-  loadUnits(): void {
-    this.service.getUnits().subscribe({
-      next: units => {
-        this.units = units;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.errorMessage = 'Unable to load units.';
-        this.cdr.markForCheck();
-      }
-    });
-  }
-
+  readonly form: FormGroup = this.createForm();
+  ngOnInit(): void { this.loadUnits(); this.loadRecords(); }
+  private createForm(): FormGroup { return this.fb.group({ description: ['', [Validators.required, Validators.maxLength(1000)]], unitId: [null, Validators.required], quantity: [null, [Validators.required, Validators.min(0)]] }); }
+  loadUnits(): void { this.service.getUnits().subscribe({ next: u => { this.units = u; this.cdr.markForCheck(); }, error: () => this.errorMessage = 'Unable to load units.' }); }
   loadRecords(page = this.pageIndex): void {
     this.loading = true;
-
-    this.service.getOthers(page, this.pageSize).subscribe({
-      next: response => {
-        this.records = response.content ?? [];
-        this.totalElements = response.totalElements ?? 0;
-        this.totalPages = response.totalPages ?? 0;
-        this.pageIndex = response.number ?? page;
-        this.pageSize = response.size ?? this.pageSize;
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.errorMessage = 'Unable to load Others records.';
-        this.loading = false;
-        this.cdr.markForCheck();
-      }
-    });
+    this.service.getOthers(page, this.pageSize).subscribe({ next: p => { this.records = p.content ?? []; this.totalElements = p.totalElements ?? 0; this.totalPages = p.totalPages ?? 0; this.pageIndex = p.number ?? page; this.pageSize = p.size ?? this.pageSize; this.loading = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to load Others records.'; this.loading = false; this.cdr.markForCheck(); } });
   }
-
-  saveRow(index: number): void {
-    const form = this.otherRows.at(index);
-
-    if (form.invalid || this.saving) {
-      form.markAllAsTouched();
-      this.errorMessage = 'Please fill all required fields.';
-      return;
-    }
-
-    const value = form.getRawValue();
-
-    if (!String(value.description ?? '').trim() ||
-        value.unitId == null || value.quantity == null) {
-      return;
-    }
-
-    const request = {
-      description: String(value.description).trim(),
-      unitId: Number(value.unitId),
-      quantity: Number(value.quantity)
-    };
-
-    this.saving = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const operation = this.editingId !== null
-      ? this.service.updateOther(this.editingId, request)
-      : this.service.createOther(request);
-
-    operation.subscribe({
-      next: () => {
-        this.successMessage = this.editingId !== null
-          ? 'Record updated successfully.'
-          : 'Record saved successfully.';
-
-        this.saving = false;
-        this.editingId = null;
-
-        form.reset({
-          description: '',
-          unitId: null,
-          quantity: null
-        });
-
-        this.loadRecords(0);
-        this.cdr.markForCheck();
-      },
-      error: error => {
-        this.errorMessage =
-          error?.error?.message ?? 'Unable to save record.';
-        this.saving = false;
-        this.cdr.markForCheck();
-      }
-    });
+  startAdd(): void { if (this.adding || this.editingId !== null) return; this.adding = true; this.form.reset(); this.errorMessage = ''; }
+  cancelAdd(): void { this.adding = false; this.form.reset(); }
+  edit(row: OthersRecord): void { if (this.saving) return; this.adding = false; this.editingId = row.id; this.form.setValue({ description: row.description, unitId: row.unit.id, quantity: row.quantity }); this.errorMessage = ''; }
+  cancelEdit(): void { this.editingId = null; this.form.reset(); }
+  save(): void {
+    if (this.form.invalid || this.saving) { this.form.markAllAsTouched(); return; }
+    const v = this.form.getRawValue(); const id = this.editingId;
+    const request = { description: String(v.description).trim(), unitId: Number(v.unitId), quantity: Number(v.quantity), ...(id === null && this.workContext.workId !== null ? { workId: this.workContext.workId } : {}) };
+    this.saving = true; this.errorMessage = '';
+    const op = id === null ? this.service.createOther(request) : this.service.updateOther(id, request);
+    op.subscribe({ next: row => { if (id === null) { this.workContext.workId = row.workId ?? this.workContext.workId; this.records = [row, ...this.records].slice(0, this.pageSize); this.totalElements++; this.adding = true; } else { this.records = this.records.map(r => r.id === row.id ? row : r); this.editingId = null; } this.form.reset(); this.saving = false; this.cdr.markForCheck(); }, error: e => { this.errorMessage = e?.error?.message ?? 'Unable to save record.'; this.saving = false; this.cdr.markForCheck(); } });
   }
-
-  edit(record: OthersRecord): void {
-    this.editingId = record.id;
-
-    const form = this.otherRows.at(0);
-    form.patchValue({
-      description: record.description,
-      unitId: record.unit.id,
-      quantity: record.quantity
-    });
-
-    this.errorMessage = '';
-    this.successMessage = '';
-  }
-
-  cancelEdit(): void {
-    this.editingId = null;
-    this.otherRows.at(0).reset({
-      description: '',
-      unitId: null,
-      quantity: null
-    });
-  }
-
-  delete(record: OthersRecord): void {
-    if (!confirm(`Delete "${record.description}"?`)) {
-      return;
-    }
-
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    this.service.deleteOther(record.id).subscribe({
-      next: () => {
-        this.successMessage = 'Record deleted successfully.';
-
-        const nextPage = this.records.length === 1 && this.pageIndex > 0
-          ? this.pageIndex - 1
-          : this.pageIndex;
-
-        this.loadRecords(nextPage);
-      },
-      error: error => {
-        this.errorMessage =
-          error?.error?.message ?? 'Unable to delete record.';
-        this.cdr.markForCheck();
-      }
-    });
-  }
-
-  viewAudit(record: OthersRecord): void {
-    this.service.getAuditHistory(record.id).subscribe({
-      next: auditDetails => {
-        this.dialog.open(AuditDetails, {
-          width: '900px',
-          maxWidth: '95vw',
-          maxHeight: '85vh',
-          autoFocus: false,
-          panelClass: 'audit-details-dialog',
-          data: {
-            building: record,
-            auditDetails
-          }
-        });
-      },
-      error: error => {
-        this.errorMessage =
-          error?.error?.message ?? 'Unable to load audit details.';
-        this.cdr.markForCheck();
-      }
-    });
-  }
-
-  changePage(page: number): void {
-    if (page < 0 || page >= this.totalPages || page === this.pageIndex) {
-      return;
-    }
-
-    this.loadRecords(page);
-  }
-
-  changePageSize(value: string | number): void {
-    this.pageSize = Number(value);
-    this.loadRecords(0);
-  }
+  delete(row: OthersRecord): void { if (this.saving || !confirm(`Delete "${row.description}"?`)) return; this.errorMessage = ''; this.service.deleteOther(row.id).subscribe({ next: () => { this.records = this.records.filter(r => r.id !== row.id); this.totalElements = Math.max(0, this.totalElements - 1); if (!this.records.length && this.pageIndex > 0) this.pageIndex--; this.loadRecords(this.pageIndex); }, error: e => this.errorMessage = e?.error?.message ?? 'Unable to delete record.' }); }
+  viewAudit(row: OthersRecord): void { this.service.getAuditHistory(row.id).subscribe({ next: auditDetails => this.dialog.open(AuditDetails, { width: '900px', maxWidth: '95vw', maxHeight: '85vh', autoFocus: false, panelClass: 'audit-details-dialog', data: { building: row, auditDetails } }), error: e => this.errorMessage = e?.error?.message ?? 'Unable to load audit details.' }); }
+  changePage(page: number): void { if (page >= 0 && page < this.totalPages && page !== this.pageIndex) this.loadRecords(page); }
+  changePageSize(size: string): void { this.pageSize = Number(size); this.loadRecords(0); }
+  get serialOffset(): number { return this.pageIndex * this.pageSize; }
 }

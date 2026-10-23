@@ -21,8 +21,6 @@ public class DatabaseInitializer {
             jdbc.execute(
                 "CREATE SEQUENCE IF NOT EXISTS work_id_seq START WITH 1");
             jdbc.execute(
-                "CREATE SEQUENCE IF NOT EXISTS scope_id_seq START WITH 1");
-            jdbc.execute(
                 "CREATE SEQUENCE IF NOT EXISTS subwork_id_seq START WITH 1");
 
             addOption(dropdownRepository, "MAINTENANCE_TYPE",
