@@ -1902,146 +1902,37 @@ html {
   font-weight: 600;
 }
 
-/* Others Form */
+/* Others Component */
 .others-container {
+  width: 100%;
   padding: 16px;
-}
-
-.others-container form {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.others-container mat-form-field {
-  flex: 1;
-  min-width: 180px;
-}
-
-@media (max-width: 600px) {
-  .scope-navigation {
-    flex-wrap: wrap;
-  }
-
-  .others-container form {
-    flex-direction: column;
-  }
-
-  .others-container mat-form-field {
-    width: 100%;
-  }
-}
-
-/* Others component */
-.others-container {
-  padding: 16px;
-}
-
-.others-form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.others-form mat-form-field {
-  flex: 1 1 200px;
-  min-width: 180px;
-}
-
-.others-form-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding-top: 8px;
-}
-
-.others-table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.others-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.others-table th,
-.others-table td {
-  border: 1px solid #d5dce2;
-  padding: 10px 12px;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.others-table th {
-  background: #e7f4f8;
-  font-weight: 600;
-}
-
-.others-table tbody tr:nth-child(even) {
-  background: #f4fafc;
-}
-
-.others-actions {
-  white-space: nowrap;
-}
-
-.others-pagination {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 16px;
-  font-size: 13px;
-}
-
-.others-pagination select {
-  padding: 6px;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  background: white;
-}
-
-.success-message {
-  color: #216e39;
-}
-
-.error-message {
-  color: #b42318;
-}
-
-@media (max-width: 600px) {
-  .others-form {
-    flex-direction: column;
-  }
-
-  .others-form mat-form-field {
-    width: 100%;
-  }
-
-  .others-form-actions {
-    padding-top: 0;
-  }
-
-  .others-pagination {
-    justify-content: flex-start;
-  }
-}
-
-
-/* Others page: reuse Building table appearance */
-.others-container {
-  width: 100%;
 }
 
 .others-container .building-section {
   margin-bottom: 20px;
 }
 
+/* Form */
+.others-container .others-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.others-container .others-form mat-form-field {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.others-container .others-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+/* Tables */
 .others-container .building-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -2052,19 +1943,18 @@ html {
   border-collapse: collapse;
 }
 
+.others-container .building-entry-table th,
+.others-container .building-entry-table td {
+  border: 1px solid #d3dce0;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: middle;
+}
+
 .others-container .building-entry-table thead th {
   background-color: #e1f6fb;
   color: #111;
-  text-align: left;
   font-weight: 600;
-  border: 1px solid #d3dce0;
-  padding: 12px;
-}
-
-.others-container .building-entry-table tbody td {
-  border: 1px solid #d3dce0;
-  padding: 8px 12px;
-  vertical-align: middle;
 }
 
 .others-container .building-entry-table tbody tr:nth-child(even) {
@@ -2080,6 +1970,7 @@ html {
   min-width: 130px;
 }
 
+/* Actions */
 .others-container .building-actions {
   white-space: nowrap;
 }
@@ -2096,6 +1987,7 @@ html {
   color: #d32f2f;
 }
 
+/* Pagination */
 .others-container .table-footer {
   display: flex;
   justify-content: flex-end;
@@ -2105,8 +1997,8 @@ html {
 .others-container .pagination-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 12px;
 }
 
 .others-container .page-size-label {
@@ -2119,13 +2011,37 @@ html {
   padding: 5px 8px;
 }
 
+/* Messages */
 .others-container .table-message {
-  text-align: center;
   padding: 18px;
+  text-align: center;
+}
+
+.others-container .success-message {
+  color: #216e39;
+}
+
+.others-container .error-message {
+  color: #b42318;
 }
 
 .others-container .required {
   color: #d32f2f;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .others-container .others-form {
+    flex-direction: column;
+  }
+
+  .others-container .others-form mat-form-field {
+    width: 100%;
+  }
+
+  .others-container .others-form-actions {
+    padding-top: 0;
+  }
 }
 
 @media (max-width: 768px) {
