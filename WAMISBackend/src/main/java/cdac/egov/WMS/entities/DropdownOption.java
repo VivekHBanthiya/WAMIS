@@ -1,0 +1,38 @@
+package cdac.egov.WMS.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(
+    name = "dropdown_options",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"category", "label"}
+    )
+)
+public class DropdownOption {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String category;
+
+    @Column(nullable = false)
+    private String label;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+    protected DropdownOption() {}
+
+    public DropdownOption(String category, String label) {
+        this.category = category;
+        this.label = label;
+    }
+
+    public Long getId() { return id; }
+    public String getCategory() { return category; }
+    public String getLabel() { return label; }
+    public boolean isActive() { return active; }
+}

@@ -1,0 +1,5 @@
+package cdac.egov.WMS.repositories;
+
+public class OthersAuditRepository {
+
+}

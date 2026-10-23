@@ -1,5 +1,0 @@
-package cdac.egov.qmssvr.dto;
-
-public class BuildingRequest {
-
-}

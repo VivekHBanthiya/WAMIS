@@ -1,138 +1,178 @@
+
 <div class="others-container">
   <h2>Others</h2>
 
-  <form [formGroup]="othersForm" (ngSubmit)="save()" class="others-form">
-    <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
-      <input matInput formControlName="description" />
+  <section class="building-section">
+    <h3 class="section-title">Add Others Details</h3>
 
-      <mat-error *ngIf="othersForm.get('description')?.hasError('required')">
-        Description is required.
-      </mat-error>
-      <mat-error *ngIf="othersForm.get('description')?.hasError('maxlength')">
-        Maximum 1000 characters.
-      </mat-error>
-    </mat-form-field>
+    <form [formGroup]="addRowsForm" (ngSubmit)="$event.preventDefault()">
+      <div class="building-table-wrapper">
+        <table class="building-entry-table">
+          <thead>
+            <tr>
+              <th>Sr. No.</th>
+              <th>Description <span class="required">*</span></th>
+              <th>Unit <span class="required">*</span></th>
+              <th>Quantity <span class="required">*</span></th>
+              <th>Actions</th>
+            </tr>
+          </thead>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Unit</mat-label>
-      <mat-select formControlName="unitId">
-        <mat-option *ngFor="let unit of units" [value]="unit.id">
-          {{ unit.shortName }} - {{ unit.description }}
-        </mat-option>
-      </mat-select>
+          <tbody formArrayName="otherRows">
+            <tr *ngFor="let row of otherRows.controls; let i = index"
+                [formGroupName]="i">
+              <td>{{ i + 1 }}</td>
 
-      <mat-error *ngIf="othersForm.get('unitId')?.hasError('required')">
-        Please select a unit.
-      </mat-error>
-    </mat-form-field>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input matInput formControlName="description"
+                         placeholder="Enter description">
+                  <mat-error>Description is required.</mat-error>
+                </mat-form-field>
+              </td>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Quantity</mat-label>
-      <input matInput type="number" min="0" formControlName="quantity" />
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="unitId" placeholder="Select unit">
+                    <mat-option *ngFor="let unit of units" [value]="unit.id">
+                      {{ unit.shortName }} - {{ unit.description }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error>Unit is required.</mat-error>
+                </mat-form-field>
+              </td>
 
-      <mat-error *ngIf="othersForm.get('quantity')?.hasError('required')">
-        Quantity is required.
-      </mat-error>
-      <mat-error *ngIf="othersForm.get('quantity')?.hasError('min')">
-        Quantity cannot be negative.
-      </mat-error>
-    </mat-form-field>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" min="0" step="0.01"
+                         formControlName="quantity" placeholder="Enter quantity">
+                  <mat-error>Enter a valid quantity.</mat-error>
+                </mat-form-field>
+              </td>
 
-    <div class="others-form-actions">
-      <button mat-raised-button color="primary" type="submit" [disabled]="saving">
-        {{ saving ? 'Saving...' : editingId === null ? 'Add' : 'Update' }}
-      </button>
+              <td class="building-actions">
+                <button mat-icon-button type="button" class="save-icon"
+                        [disabled]="saving"
+                        (click)="saveRow(i)" title="Save row">
+                  <mat-icon>save</mat-icon>
+                </button>
 
-      <button mat-button type="button" (click)="resetForm()">
-        Clear
-      </button>
+                <button mat-icon-button type="button"
+                        (click)="addRow()" title="Add another row">
+                  <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button type="button" class="delete-icon"
+                        (click)="removeRow(i)" title="Remove row">
+                  <mat-icon>delete</mat-icon>
+                </button>
+
+                <button *ngIf="editingId !== null && i === 0"
+                        mat-icon-button type="button"
+                        (click)="cancelEdit()" title="Cancel edit">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+
+    <p *ngIf="successMessage" class="inline-status">
+      {{ successMessage }}
+    </p>
+    <p *ngIf="errorMessage" class="inline-error">
+      {{ errorMessage }}
+    </p>
+  </section>
+
+  <section class="building-section view-building-section">
+    <h3 class="section-title">Others Records</h3>
+
+    <div class="building-table-wrapper results-wrapper">
+      <table class="building-entry-table results-table">
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>Description</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+            <th>Audit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let record of records; let i = index">
+            <td>{{ pageIndex * pageSize + i + 1 }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.unit.shortName }} - {{ record.unit.description }}</td>
+            <td>{{ record.quantity }}</td>
+
+            <td class="building-actions">
+              <button mat-icon-button type="button"
+                      (click)="viewAudit(record)"
+                      title="Audit details" aria-label="Audit details">
+                <mat-icon>check</mat-icon>
+              </button>
+            </td>
+
+            <td class="building-actions">
+              <button mat-icon-button type="button"
+                      (click)="edit(record)" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button mat-icon-button type="button" class="delete-icon"
+                      (click)="delete(record)" title="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="loading">
+            <td colspan="6" class="table-message">Loading records...</td>
+          </tr>
+
+          <tr *ngIf="!loading && records.length === 0">
+            <td colspan="6" class="table-message">No records found.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </form>
 
-  <p class="success-message" *ngIf="successMessage">
-    {{ successMessage }}
-  </p>
+    <div class="table-footer">
+      <div class="pagination-controls">
+        <label class="page-size-label">
+          Rows per page
+          <select [value]="pageSize"
+                  (change)="changePageSize($any($event.target).value)">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">
+              {{ size }}
+            </option>
+          </select>
+        </label>
 
-  <p class="error-message" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </p>
+        <span class="page-summary">
+          {{ totalElements ? pageIndex * pageSize + 1 : 0 }}–{{
+            totalElements ? pageIndex * pageSize + records.length : 0
+          }} of {{ totalElements }}
+        </span>
 
-  <h3>Others Records</h3>
+        <button mat-icon-button type="button"
+                (click)="changePage(pageIndex - 1)"
+                [disabled]="pageIndex === 0 || loading" title="Previous page">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
 
-  <div class="others-table-container">
-    <table class="others-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Description</th>
-          <th>Unit</th>
-          <th>Quantity</th>
-          <th>Created At</th>
-          <th>Updated At</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngIf="loading">
-          <td colspan="7">Loading records...</td>
-        </tr>
-
-        <tr *ngFor="let record of records">
-          <td>{{ record.id }}</td>
-          <td>{{ record.description }}</td>
-          <td>{{ record.unit.shortName }} - {{ record.unit.description }}</td>
-          <td>{{ record.quantity }}</td>
-          <td>{{ record.createdAt | date:'medium' }}</td>
-          <td>{{ record.updatedAt | date:'medium' }}</td>
-          <td class="others-actions">
-            <button mat-icon-button color="primary"
-              type="button" aria-label="Edit record"
-              (click)="edit(record)">
-              <mat-icon>edit</mat-icon>
-            </button>
-
-            <button mat-icon-button color="warn"
-              type="button" aria-label="Delete record"
-              (click)="delete(record)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-
-        <tr *ngIf="!loading && records.length === 0">
-          <td colspan="7">No records found.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="others-pagination">
-    <span>{{ totalElements }} records</span>
-
-    <label for="othersPageSize">Rows per page:</label>
-    <select
-      id="othersPageSize"
-      [value]="pageSize"
-      (change)="changePageSize($any($event.target).value)">
-      <option *ngFor="let size of pageSizeOptions" [value]="size">
-        {{ size }}
-      </option>
-    </select>
-
-    <span>Page {{ totalPages === 0 ? 0 : pageIndex + 1 }} of {{ totalPages }}</span>
-
-    <button mat-button type="button"
-      [disabled]="pageIndex === 0 || loading"
-      (click)="changePage(pageIndex - 1)">
-      Previous
-    </button>
-
-    <button mat-button type="button"
-      [disabled]="pageIndex >= totalPages - 1 || loading"
-      (click)="changePage(pageIndex + 1)">
-      Next
-    </button>
-  </div>
+        <button mat-icon-button type="button"
+                (click)="changePage(pageIndex + 1)"
+                [disabled]="pageIndex + 1 >= totalPages || loading"
+                title="Next page">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
 </div>

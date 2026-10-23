@@ -1,2 +1,9 @@
 1792672576320	Rename compilation unit 'others.java'
 1792672975727	Move compilation unit
+1792736319595	Rename package 'cdac.egov.qmssvr'
+1792736340108	Rename package 'cdac.egov.qmssvr.config'
+1792736369304	Rename package 'cdac.egov.qmssvr.services'
+1792736382893	Rename package 'cdac.egov.qmssvr.repositories'
+1792736393665	Rename package 'cdac.egov.qmssvr.entities'
+1792736401980	Rename package 'cdac.egov.qmssvr.dto'
+1792736410484	Rename package 'cdac.egov.qmssvr.controllers'

@@ -1,10 +1,9 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import {
-  OthersService,
-  OthersRecord,
-  UnitOption
-} from '../../services/others';
+
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { OthersService, OthersRecord, UnitOption } from '../../services/others';
+import { AuditDetails } from '../building/audit-details/audit-details';
 
 @Component({
   selector: 'app-others',
@@ -14,6 +13,7 @@ import {
 export class Others implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(OthersService);
+  private readonly dialog = inject(MatDialog);
   private readonly cdr = inject(ChangeDetectorRef);
 
   units: UnitOption[] = [];
@@ -23,109 +23,135 @@ export class Others implements OnInit {
   saving = false;
   errorMessage = '';
   successMessage = '';
-
   editingId: number | null = null;
 
   pageIndex = 0;
   pageSize = 5;
   totalElements = 0;
   totalPages = 0;
-
   readonly pageSizeOptions = [5, 10, 20, 50];
 
-  othersForm = this.fb.group({
-    description: ['', [Validators.required, Validators.maxLength(1000)]],
-    unitId: [null as number | null, Validators.required],
-    quantity: [null as number | null, [Validators.required, Validators.min(0)]]
-  });
+  readonly otherRows = this.fb.array<FormGroup>([]);
+  readonly addRowsForm = this.fb.group({ otherRows: this.otherRows });
 
   ngOnInit(): void {
+    this.addRow();
     this.loadUnits();
     this.loadRecords();
+  }
+
+  private createRow(): FormGroup {
+    return this.fb.group({
+      description: ['', [Validators.required, Validators.maxLength(1000)]],
+      unitId: [null as number | null, Validators.required],
+      quantity: [null as number | null, [Validators.required, Validators.min(0)]]
+    });
+  }
+
+  addRow(): void {
+    this.otherRows.push(this.createRow());
+  }
+
+  removeRow(index: number): void {
+    if (this.otherRows.length === 1) {
+      this.otherRows.at(0).reset({
+        description: '',
+        unitId: null,
+        quantity: null
+      });
+      return;
+    }
+
+    this.otherRows.removeAt(index);
   }
 
   loadUnits(): void {
     this.service.getUnits().subscribe({
       next: units => {
         this.units = units;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.errorMessage = 'Unable to load units.';
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
 
-  loadRecords(): void {
+  loadRecords(page = this.pageIndex): void {
     this.loading = true;
-    this.errorMessage = '';
 
-    this.service.getOthers(this.pageIndex, this.pageSize).subscribe({
+    this.service.getOthers(page, this.pageSize).subscribe({
       next: response => {
-        this.records = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
-        this.pageIndex = response.number;
-        this.pageSize = response.size;
+        this.records = response.content ?? [];
+        this.totalElements = response.totalElements ?? 0;
+        this.totalPages = response.totalPages ?? 0;
+        this.pageIndex = response.number ?? page;
+        this.pageSize = response.size ?? this.pageSize;
         this.loading = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.errorMessage = 'Unable to load Others records.';
         this.loading = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
 
-  save(): void {
-    if (this.othersForm.invalid || this.saving) {
-      this.othersForm.markAllAsTouched();
+  saveRow(index: number): void {
+    const form = this.otherRows.at(index);
+
+    if (form.invalid || this.saving) {
+      form.markAllAsTouched();
+      this.errorMessage = 'Please fill all required fields.';
       return;
     }
 
-    const value = this.othersForm.getRawValue();
+    const value = form.getRawValue();
 
-    if (
-      !value.description?.trim() ||
-      value.unitId == null ||
-      value.quantity == null
-    ) {
+    if (!String(value.description ?? '').trim() ||
+        value.unitId == null || value.quantity == null) {
       return;
     }
 
     const request = {
-      description: value.description.trim(),
-      unitId: value.unitId,
-      quantity: value.quantity
+      description: String(value.description).trim(),
+      unitId: Number(value.unitId),
+      quantity: Number(value.quantity)
     };
 
     this.saving = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const operation = this.editingId === null
-      ? this.service.createOther(request)
-      : this.service.updateOther(this.editingId, request);
+    const operation = this.editingId !== null
+      ? this.service.updateOther(this.editingId, request)
+      : this.service.createOther(request);
 
     operation.subscribe({
       next: () => {
-        this.successMessage = this.editingId === null
-          ? 'Record added successfully.'
-          : 'Record updated successfully.';
+        this.successMessage = this.editingId !== null
+          ? 'Record updated successfully.'
+          : 'Record saved successfully.';
 
         this.saving = false;
-        this.resetForm();
-        this.pageIndex = 0;
-        this.loadRecords();
-        this.cdr.detectChanges();
+        this.editingId = null;
+
+        form.reset({
+          description: '',
+          unitId: null,
+          quantity: null
+        });
+
+        this.loadRecords(0);
+        this.cdr.markForCheck();
       },
       error: error => {
         this.errorMessage =
-          error.error?.message ?? 'Unable to save record.';
+          error?.error?.message ?? 'Unable to save record.';
         this.saving = false;
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       }
     });
   }
@@ -133,14 +159,24 @@ export class Others implements OnInit {
   edit(record: OthersRecord): void {
     this.editingId = record.id;
 
-    this.othersForm.patchValue({
+    const form = this.otherRows.at(0);
+    form.patchValue({
       description: record.description,
       unitId: record.unit.id,
       quantity: record.quantity
     });
 
-    this.successMessage = '';
     this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+    this.otherRows.at(0).reset({
+      description: '',
+      unitId: null,
+      quantity: null
+    });
   }
 
   delete(record: OthersRecord): void {
@@ -155,27 +191,40 @@ export class Others implements OnInit {
       next: () => {
         this.successMessage = 'Record deleted successfully.';
 
-        if (this.records.length === 1 && this.pageIndex > 0) {
-          this.pageIndex--;
-        }
+        const nextPage = this.records.length === 1 && this.pageIndex > 0
+          ? this.pageIndex - 1
+          : this.pageIndex;
 
-        this.loadRecords();
-        this.cdr.detectChanges();
+        this.loadRecords(nextPage);
       },
       error: error => {
         this.errorMessage =
-          error.error?.message ?? 'Unable to delete record.';
-        this.cdr.detectChanges();
+          error?.error?.message ?? 'Unable to delete record.';
+        this.cdr.markForCheck();
       }
     });
   }
 
-  resetForm(): void {
-    this.editingId = null;
-    this.othersForm.reset({
-      description: '',
-      unitId: null,
-      quantity: null
+  viewAudit(record: OthersRecord): void {
+    this.service.getAuditHistory(record.id).subscribe({
+      next: auditDetails => {
+        this.dialog.open(AuditDetails, {
+          width: '900px',
+          maxWidth: '95vw',
+          maxHeight: '85vh',
+          autoFocus: false,
+          panelClass: 'audit-details-dialog',
+          data: {
+            building: record,
+            auditDetails
+          }
+        });
+      },
+      error: error => {
+        this.errorMessage =
+          error?.error?.message ?? 'Unable to load audit details.';
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -184,13 +233,11 @@ export class Others implements OnInit {
       return;
     }
 
-    this.pageIndex = page;
-    this.loadRecords();
+    this.loadRecords(page);
   }
 
-  changePageSize(size: number | string): void {
-    this.pageSize = Number(size);
-    this.pageIndex = 0;
-    this.loadRecords();
+  changePageSize(value: string | number): void {
+    this.pageSize = Number(value);
+    this.loadRecords(0);
   }
 }

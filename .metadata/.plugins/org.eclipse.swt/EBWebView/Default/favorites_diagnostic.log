@@ -78,3 +78,20 @@
 2026-10-22 12:10:27.521: [INFO] BookmarksLoadDropped droppedNodes=0
 2026-10-22 12:10:27.521: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
 2026-10-22 12:44:38.991: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-23 06:29:05.810: [INFO] CurrentProfilePath: E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-10-23 06:29:05.810: [INFO] Profiles total count: 1
+2026-10-23 06:29:05.810: [INFO] Profile: name=Profile 1 path=E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=null
+2026-10-23 06:29:05.810: [INFO] LastUsedProfileDir: E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-10-23 06:29:05.810: [INFO] OnDoneLoading sync enabled: 0
+2026-10-23 06:29:05.810: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-23 06:29:05.810: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-23 06:29:05.810: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-23 06:30:20.263: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-23 07:21:54.612: [INFO] CurrentProfilePath: E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-10-23 07:21:54.612: [INFO] Profiles total count: 1
+2026-10-23 07:21:54.612: [INFO] Profile: name=Profile 1 path=E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=null
+2026-10-23 07:21:54.612: [INFO] LastUsedProfileDir: E:\CDAC\project\WAMIS\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-10-23 07:21:54.612: [INFO] OnDoneLoading sync enabled: 0
+2026-10-23 07:21:54.612: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-23 07:21:54.612: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-23 07:21:54.612: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
