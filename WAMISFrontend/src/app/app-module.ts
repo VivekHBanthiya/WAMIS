@@ -17,13 +17,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmDeleteDialog } from './shared/confirm-delete-dialog';
+import { FeedbackSnackBar } from './shared/feedback-snackbar';
 
 import { AuditDetails } from './scope/building/audit-details/audit-details';
 import { Building } from './scope/building/building';
 import { Others } from './scope/others/others';
 
 @NgModule({
-  declarations: [App, Building, AuditDetails, Others],
+  declarations: [App, Building, AuditDetails, Others, ConfirmDeleteDialog, FeedbackSnackBar],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
@@ -37,6 +40,7 @@ import { Others } from './scope/others/others';
     MatSelectModule,
     MatIconModule,
     MatDialogModule,
+    MatSnackBarModule,
   ],
   providers: [provideBrowserGlobalErrorListeners(), provideAnimations(), provideHttpClient()],
   bootstrap: [App],
